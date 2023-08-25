@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import re
 from datetime import date
+from sklearn.preprocessing import OneHotEncoder
 
 #
 #### Scrape data ####
@@ -151,6 +152,12 @@ bourbon['Multi'] = 0
 bourbon['Multi'] = np.where(pd.isnull(bourbon['B2']), 0, 1)
 
 
+
+
+
+
+
+
 # Check if B2 has a value and add a new row if it does
 for index, row in bourbon.iterrows():
     if pd.notna(row['B2']):
@@ -166,3 +173,24 @@ for index, row in bourbon.iterrows():
         new_row['B1'] = row['B3']
         bourbon = bourbon.append(new_row, ignore_index=True)
 del index, new_row, row
+
+
+
+
+
+
+# One Hot Encode B1, B2, and B3 #
+one_hot = OneHotEncoder(sparse_output = False)
+
+
+# Fit transform #
+bourbon_encoded = one_hot.fit_transform(bourbon[['B1', 'B2', 'B3']])
+
+bourbon_encoded = one_hot.fit(bourbon[['B1']])
+
+trans = one_hot.transform(bourbon[['B1', 'B2', 'B3']])
+
+
+# Create a DataFrame from the encoded data
+encoded_df = pd.DataFrame(bourbon_encoded, columns=one_hot.get_feature_names_out(['B1', 'B2', 'B3']))
+
