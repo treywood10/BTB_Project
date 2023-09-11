@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Code to make Buffalo Trace Bourbon prediction
+Code to make data for Buffalo Trace Prediction.
 """
 
 # Libraries #
@@ -9,8 +9,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
 import re
-from datetime import date, datetime, timedelta
-from sklearn.preprocessing import OneHotEncoder
+from datetime import datetime, timedelta
 from meteostat import Point, Daily
 
 #
