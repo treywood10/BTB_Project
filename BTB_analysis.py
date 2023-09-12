@@ -13,8 +13,9 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, classification_report
 from bayes_opt import BayesianOptimization
+
 
 
 #
@@ -100,7 +101,7 @@ X_test = pd.DataFrame(
 
 
 # Clear variables #
-del cat_pipe, cat_vars, num_pipe, num_vars, preprocess, targets
+del cat_pipe, cat_vars, num_pipe, num_vars, preprocess
 
 
 
@@ -179,8 +180,11 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
     if best_hypers['penalty'] != 'elasticnet':
         best_hypers.pop('l1_ratio')
         
+    if best_hypers['penalty'] == 'elasticnet':
+        best_hypers['solver'] = 'saga'
+        
 
-    best_logit_model = LogisticRegression(**best_hypers)
+    best_logit_model = LogisticRegression(**best_hypers, max_iter=20000)
     
     best_model = MultiOutputClassifier(best_logit_model)
     
@@ -196,7 +200,13 @@ pbounds = {
 
 best_f1, best_model, hypes = log_tuning(X_train, y_train, 
                                  pbounds, n_init = 25, 
-                                 n_iter = 75, seed = seed)
+                                 n_iter = 5, seed = seed)
+
+best_model.fit(X_train, y_train)
+
+y_pred = best_model.predict(X_train)
+
+report = classification_report(y_train, y_pred, target_names = targets, output_dict=True)
 
 # Fill comparison matrix #
 train_compare = pd.concat([train_compare,

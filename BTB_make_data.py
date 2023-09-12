@@ -308,7 +308,7 @@ del category, column_name, columns_with_category, index, row, t, time_since_last
 
 
 # Drop B variables #
-bourbon = bourbon.drop(['B1', 'B2', 'B3'], axis = 1)
+#bourbon = bourbon.drop(['B1', 'B2', 'B3'], axis = 1)
 
 
 #
@@ -351,6 +351,37 @@ ky_data = ky_data[['Date', 'temp']]
 # Merge #
 bourbon = pd.merge(bourbon, ky_data, how = 'left', on = 'Date')
 del data, end, ky_data, location, start
+
+
+#
+#### Expand days with >1 bourbons #
+#
+
+# Make '0' values in B2 and B3 into nan #
+bourbon['B2'] = bourbon['B2'].replace(0, np.nan)
+bourbon['B3'] = bourbon['B3'].replace(0, np.nan)
+
+# Check if B2 is not equal to '0' for any element in the Series
+for index, row in bourbon.iterrows():
+    if pd.notna(row['B2']):
+        new_row = row.copy()  
+        new_row['B1'] = row['B2'] 
+        bourbon = pd.concat([bourbon, pd.DataFrame([new_row])], axis = 0)
+
+
+for index, row in bourbon.iterrows():
+    if pd.notna(row['B3']):
+        new_row = row.copy()  
+        new_row['B1'] = row['B3']  
+        bourbon = pd.concat([bourbon, pd.DataFrame([new_row])], axis = 0)
+del index, new_row, row        
+
+# Drop B2 and B3 #
+bourbon = bourbon.drop(['B2', 'B3'], axis = 1)
+
+
+# Rename B1 #
+bourbon.rename(columns={'B1': 'Bourbon'}, inplace=True)
 
 #
 #### Save Data
