@@ -12,13 +12,15 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import f1_score
 from bayes_opt import BayesianOptimization
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 
 #
@@ -33,6 +35,11 @@ del f
 
 # Set seed. Selected 90 for the proof of Buffalo Trace Flagship bourbon #
 seed = 90
+
+
+# Set  searches #
+n_init = 50
+n_iter = 150
 
 
 # Import csv #
@@ -207,8 +214,8 @@ pbounds = {
 
 # Optimize model #
 best_f1, best_model = log_tuning(X_train, y_train, 
-                                 pbounds, n_init = 25, 
-                                 n_iter = 75, seed = seed)
+                                 pbounds, n_init = n_init, 
+                                 n_iter = n_iter, seed = seed)
 
 # Notify #
 beep(6)
@@ -334,8 +341,8 @@ pbounds = {
 
 # Optimize model #
 best_f1, best_model = svm_tuning(X_train, y_train, 
-                                 pbounds, n_init = 25, 
-                                 n_iter = 75, seed = seed)
+                                 pbounds, n_init = n_init, 
+                                 n_iter = n_iter, seed = seed)
 
 
 # Notify #
@@ -469,8 +476,8 @@ pbounds = {
 
 # Optimize model #
 best_f1, best_model = rf_tuning(X_train, y_train, 
-                                 pbounds, n_init = 25, 
-                                 n_iter = 75, seed = seed)
+                                 pbounds, n_init = n_init, 
+                                 n_iter = n_iter, seed = seed)
 
 
 # Notify #
@@ -490,12 +497,19 @@ train_compare = pd.concat([train_compare,
                             'hypers': [best_model]})], 
                           ignore_index = True).sort_values('Test_F1', ascending = False)
 
+
 #
 #### XGBoost
 #
 
+# Fix target values for XGBoost #
+labeler = LabelEncoder()
+y_train_encode = labeler.fit_transform(y_train)
+y_test_encode = labeler.transform(y_test)
+
+
 # Objective function for XGBoost #
-def boost_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
+def boost_tuning(X_train, y_train_encode, pbounds, n_init, n_iter, seed):
     def obj_xgb(n_estimators, max_depth, 
                 learning_rate, subsample, 
                 colsample_bytree, 
@@ -540,10 +554,10 @@ def boost_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
                                        n_jobs = 2)
     
         # Cross validation #
-        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+        pred = cross_val_predict(model, X_train, y_train_encode, cv = 5)
     
         # F1 Score #
-        f_score = f1_score(y_train, pred)
+        f_score = f1_score(y_train_encode, pred, average = 'weighted')
         
         return f_score
 
@@ -568,3 +582,170 @@ def boost_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
     best_model = XGBClassifier(**best_hypers)
     
     return best_f1, best_model 
+
+
+# Set search space #
+pbounds = {
+    'n_estimators' : (50, 1000),
+    'max_depth' : (3, 8),
+    'learning_rate' : (0.0001, 1),
+    'subsample' : (0.2, 0.8),
+    'colsample_bytree' : (0.2, 1),
+    'reg_alpha' : (0.0001, 1),
+    'reg_lambda' : (0.0001, 1)
+}
+
+
+# Optimize model #
+best_f1, best_model = boost_tuning(X_train, y_train_encode, 
+                                 pbounds, n_init = n_init, 
+                                 n_iter = n_iter, seed = seed)
+
+
+# Notify #
+beep(6)
+
+
+# Generate test score #
+best_model.fit(X_train, y_train_encode)
+test_f1 = f1_score(y_test_encode, best_model.predict(X_test), average = 'weighted')
+
+
+# Fill comparison matrix #
+train_compare = pd.concat([train_compare,
+                           pd.DataFrame({'Model' : 'XGBoost',
+                            'Train_F1': best_f1,
+                            'Test_F1': test_f1,
+                            'hypers': [best_model]})], 
+                          ignore_index = True).sort_values('Test_F1', ascending = False)
+
+
+#
+#### KNN
+#
+
+# Objective function for KNN #
+def knn_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
+    def obj_knn(n_neighbors, weights, algorithm, leaf_size, p):
+        
+        """
+        Function for bayesian search of best hyperparameters. 
+
+        Parameters
+        ----------
+        n_neighbors : int
+            Number of neighbors to use.
+        weights : string
+            Weight function.
+        algorithm : string
+            Algorithm to compute nearest neighbors.
+        leaf_size : int
+            Leaf size passed to BallTree and KDTree.
+        p : int
+            Power parameter for Minkowski metric.
+
+        Returns
+        -------
+        f_score : float
+            F1 score to measure model performance.
+
+        """
+        
+        # Vary weights #
+        if weights <= 0.5:
+            weights = 'uniform'
+        else:
+            weights = 'distance'
+        
+        # Vary algorithm #
+        if algorithm <= 1:
+            algorithm = 'auto'
+        elif algorithm <= 2:
+            algorithm = 'ball_tree'
+        elif algorithm <= 3:
+            algorithm = 'kd_tree'
+        else:
+            algorithm = 'brute'
+        
+        # Vary p #
+        # Variation on p #
+        if p <= 1.0:
+            p = 1
+        elif p <= 1.0 and algorithm != 'brute':
+            p = 1
+        else:
+            p = 2
+            
+        
+        # Instantiate modlel #
+        model = KNeighborsClassifier(n_neighbors = int(n_neighbors),
+                                     weights = weights,
+                                     algorithm = algorithm,
+                                     leaf_size = int(leaf_size),
+                                     p = p,
+                                     n_jobs = 2)
+        
+        # Cross validation #
+        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+        
+        # F1 Score #
+        f_score = f1_score(y_train, pred, average = 'weighted')
+        
+        return f_score
+
+    optimizer = BayesianOptimization(f=obj_knn, pbounds=pbounds, random_state=seed)
+    optimizer.maximize(init_points=n_init, n_iter=n_iter)
+    
+    best_hypers = optimizer.max['params']
+    best_f1 = optimizer.max['target']
+
+    if best_hypers['weights'] <= 0.5:
+        best_hypers['weights'] = 'uniform'
+    else:
+        best_hypers['weights'] = 'distance'
+        
+    algorithms = ['auto', 'ball_tree', 'kd_tree', 'brute']
+    best_hypers['algorithm'] = algorithms[int(best_hypers['algorithm'])]
+
+    if best_hypers['p'] <= 1.0 and best_hypers['algorithm'] != 'brute':
+        best_hypers['p'] = 1
+    else:
+        best_hypers['p'] = 2
+        
+    best_hypers['n_neighbors'] = int(round(best_hypers['n_neighbors']))
+    best_hypers['leaf_size'] = int(round(best_hypers['leaf_size']))
+
+    best_model = KNeighborsClassifier(**best_hypers, n_jobs=2)
+    
+    return best_f1, best_model
+
+pbounds = {
+    'n_neighbors': (2, 8),
+    'weights' : (0, 1),
+    'algorithm' : (0, 4),
+    'leaf_size' : (20, 40),
+    'p' : (0, 2)}
+
+
+# Optimize model #
+best_f1, best_model = knn_tuning(X_train, y_train, 
+                                 pbounds, n_init = n_init, 
+                                 n_iter = n_iter, seed = seed)
+
+
+# Notify #
+beep(6)
+
+
+# Generate test score #
+best_model.fit(X_train, y_train)
+test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
+
+
+# Fill comparison matrix #
+train_compare = pd.concat([train_compare,
+                           pd.DataFrame({'Model' : 'KNN',
+                            'Train_F1': best_f1,
+                            'Test_F1': test_f1,
+                            'hypers': [best_model]})], 
+                          ignore_index = True).sort_values('Test_F1', ascending = False)
