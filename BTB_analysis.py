@@ -7,6 +7,7 @@ Code to predict Buffalo Trace bourbon.
 
 import pandas as pd
 import numpy as np
+from beepy import beep
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -18,8 +19,6 @@ from bayes_opt import BayesianOptimization
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
-
-
 
 
 #
@@ -45,7 +44,7 @@ bourbon = bourbon.drop(['Closed_time', 'Date'], axis = 1)
 
 
 # Make matrix to compare models #
-train_compare = pd.DataFrame(columns = ['Model', 'F1', 'hypers'])
+train_compare = pd.DataFrame(columns = ['Model', 'Train_F1', 'Test_F1', 'hypers'])
 
 
 #
@@ -205,15 +204,26 @@ pbounds = {
     'multi_class' : (0, 1)
 }
 
+
+# Optimize model #
 best_f1, best_model = log_tuning(X_train, y_train, 
                                  pbounds, n_init = 25, 
                                  n_iter = 75, seed = seed)
+
+# Notify #
+beep(6)
+
+
+# Generate test score #
+best_model.fit(X_train, y_train)
+test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
 
 
 # Fill comparison matrix #
 train_compare = pd.concat([train_compare,
                            pd.DataFrame({'Model' : 'Logistic',
-                            'F1': best_f1,
+                            'Train_F1': best_f1,
+                            'Test_F1': test_f1,
                             'hypers': [best_model]})], 
                           ignore_index = True)
 
@@ -322,16 +332,28 @@ pbounds = {
     'shrinking': (0, 1)}
 
 
+# Optimize model #
 best_f1, best_model = svm_tuning(X_train, y_train, 
                                  pbounds, n_init = 25, 
                                  n_iter = 75, seed = seed)
 
+
+# Notify #
+beep(6)
+
+
+# Generate test score #
+best_model.fit(X_train, y_train)
+test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
+
+
 # Fill comparison matrix #
 train_compare = pd.concat([train_compare,
                            pd.DataFrame({'Model' : 'SVM',
-                            'F1': best_f1,
+                            'Train_F1': best_f1,
+                            'Test_F1': test_f1,
                             'hypers': [best_model]})], 
-                          ignore_index = True)
+                          ignore_index = True).sort_values('Test_F1', ascending = False)
 
 
 # Objective function for random forest #
@@ -440,13 +462,26 @@ pbounds = {
 }
 
 
+
+# Optimize model #
 best_f1, best_model = rf_tuning(X_train, y_train, 
                                  pbounds, n_init = 25, 
                                  n_iter = 75, seed = seed)
 
+
+# Notify #
+beep(6)
+
+
+# Generate test score #
+best_model.fit(X_train, y_train)
+test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
+
+
 # Fill comparison matrix #
 train_compare = pd.concat([train_compare,
                            pd.DataFrame({'Model' : 'Random Forest',
-                            'F1': best_f1,
+                            'Train_F1': best_f1,
+                            'Test_F1': test_f1,
                             'hypers': [best_model]})], 
-                          ignore_index = True)
+                          ignore_index = True).sort_values('Test_F1', ascending = False)
