@@ -215,9 +215,9 @@ def rename_categories(x):
     x = x.apply(lambda value: replace_value(value, r'.*close.*', 'Closed'))
     x = x.apply(lambda value: replace_value(value, r'.*weller.*', 'Weller'))
     x = x.apply(lambda value: replace_value(value, r'.*eagle.*', 'Eagle Rare'))
-    x = x.apply(lambda value: replace_value(value, r'.*sazerac.*', 'Sazerac'))
+    x = x.apply(lambda value: replace_value(value, r'.*sazerac.*', 'Other'))
     x = x.apply(lambda value: replace_value(value, r'.*taylor.*', 'Taylor'))
-    x = x.apply(lambda value: replace_value(value, r'.*oak.*', 'Oak'))
+    x = x.apply(lambda value: replace_value(value, r'.*oak.*', 'Other'))
     x = x.apply(lambda value: replace_value(value, r'.*none.*', 'Closed'))
     
     return x
@@ -353,6 +353,15 @@ bourbon = pd.merge(bourbon, ky_data, how = 'left', on = 'Date')
 del data, end, ky_data, location, start
 
 
+# Lag Boubrbon #
+bourbon['B1_lag'] = bourbon['B1'].shift(1)
+bourbon['B2_lag'] = bourbon['B2'].shift(1)
+
+
+# Drop fist observation #
+bourbon = bourbon.dropna(subset = ['B1_lag'])
+
+
 #
 #### Expand days with >1 bourbons #
 #
@@ -360,6 +369,12 @@ del data, end, ky_data, location, start
 # Make '0' values in B2 and B3 into nan #
 bourbon['B2'] = bourbon['B2'].replace(0, np.nan)
 bourbon['B3'] = bourbon['B3'].replace(0, np.nan)
+
+
+# Same with B1_lag and B2_lag #
+bourbon['B1_lag'] = bourbon['B1_lag'].replace(0, np.nan)
+bourbon['B2_lag'] = bourbon['B2_lag'].replace(0, np.nan)
+
 
 # Check if B2 is not equal to '0' for any element in the Series
 for index, row in bourbon.iterrows():
@@ -381,7 +396,14 @@ bourbon = bourbon.drop(['B2', 'B3'], axis = 1)
 
 
 # Rename B1 #
-bourbon.rename(columns={'B1': 'Bourbon'}, inplace=True)
+bourbon.rename(columns={'B1': 'Bourbon_1'}, inplace=True)
+bourbon.rename(columns={'B1_lag': 'Bourbon_1_lag'}, inplace=True)
+bourbon.rename(columns={'B2_lag': 'Bourbon_2_lag'}, inplace=True)
+
+
+# Replace nan with No Bottles in No Extra #
+bourbon = bourbon.replace(np.nan, 'No Extra')
+
 
 #
 #### Save Data

@@ -6,14 +6,15 @@ Code to predict Buffalo Trace bourbon.
 """
 
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.multioutput import MultiOutputClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
-from sklearn.metrics import f1_score, classification_report
+from sklearn.metrics import f1_score
 from bayes_opt import BayesianOptimization
 
 
@@ -48,12 +49,12 @@ train_compare = pd.DataFrame(columns = ['Model', 'F1', 'hypers'])
 #
 
 # List of targets #
-targets = ['Blantons', 'Eagle Rare', 'Taylor', 'Weller']
+#targets = ['Blantons', 'Eagle Rare', 'Taylor', 'Weller']
 
 
 # Split data #
-X_train, X_test, y_train, y_test = train_test_split(bourbon.drop(targets, axis = 1), 
-                                                    bourbon[targets],
+X_train, X_test, y_train, y_test = train_test_split(bourbon.drop('Bourbon', axis = 1), 
+                                                    bourbon['Bourbon'],
                                                     test_size = 0.2,
                                                     random_state = seed)
 
@@ -104,16 +105,13 @@ X_test = pd.DataFrame(
 del cat_pipe, cat_vars, num_pipe, num_vars, preprocess
 
 
-
-# Multilabel Logistic #
-
 #
 #### Logistic Regression
 #
 
 # Objective function for Logistic Regression #
 def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
-    def obj_log(penalty, C, l1_ratio):
+    def obj_log(penalty, C, l1_ratio, multi_class):
         """
         Function for bayesian search of best hyperparameters. 
 
@@ -131,7 +129,8 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
         f_score : float
             F1 score to measure model performance.
             """
-
+        
+        # Penalty
         if penalty < 0.3:
             penalty = 'l1'
 
@@ -140,6 +139,12 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
 
         else:
             penalty = 'elasticnet'
+        
+        # Multiclass option #
+        if multi_class < 0.5:
+            multi_class = 'ovr'
+        else :
+            multi_class = 'multinomial'
 
         # Instantiate model #
         if penalty == 'elasticnet':
@@ -150,11 +155,9 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
             model = LogisticRegression(C=C, penalty=penalty,
                                        solver='saga', random_state=seed,
                                        max_iter=20000)
-        
-        multi_mod = MultiOutputClassifier(model).fit(X_train, y_train)
 
         # Cross validation #
-        pred = cross_val_predict(multi_mod, X_train, y_train, cv = 5)
+        pred = cross_val_predict(model, X_train, y_train, cv = 5)
 
         # F1 Score #
         f_score = f1_score(y_train, pred, average = 'weighted')
@@ -182,11 +185,16 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
         
     if best_hypers['penalty'] == 'elasticnet':
         best_hypers['solver'] = 'saga'
+
+    
+    # Multiclass option #
+    if best_hypers['multi_class'] < 0.5:
+        best_hypers['multi_class'] = 'ovr'
+    else :
+        best_hypers['multi_class'] = 'multinomial'
         
 
-    best_logit_model = LogisticRegression(**best_hypers, max_iter=20000)
-    
-    best_model = MultiOutputClassifier(best_logit_model)
+    best_model = LogisticRegression(**best_hypers, max_iter=20000)
     
     return best_f1, best_model, best_hypers
     
@@ -195,18 +203,15 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
 pbounds = {
     'C' : (0.00001, 10),
     'penalty' : (0, 1),
-    'l1_ratio' : (0.01, 0.99)
+    'l1_ratio' : (0.01, 0.99),
+    'multi_class' : (0, 1)
 }
 
 best_f1, best_model, hypes = log_tuning(X_train, y_train, 
                                  pbounds, n_init = 25, 
                                  n_iter = 5, seed = seed)
 
-best_model.fit(X_train, y_train)
 
-y_pred = best_model.predict(X_train)
-
-report = classification_report(y_train, y_pred, target_names = targets, output_dict=True)
 
 # Fill comparison matrix #
 train_compare = pd.concat([train_compare,
@@ -215,3 +220,42 @@ train_compare = pd.concat([train_compare,
                             'hypers': [best_model]})], 
                           ignore_index = True)
 
+
+
+
+# Fit the best logistic regression model to your data
+best_model.fit(X_train, y_train)
+
+
+# Get list of coefficients #
+coefficients = best_model.coef_  # This will be a 2D array with shape (n_classes, n_features)
+
+
+# Get the absolute values of coefficients for each class
+abs_coefficients = np.abs(coefficients)
+
+
+# Get the feature names (assuming you have them in a list)
+feature_names = X_train.columns.tolist()
+
+
+# Create a feature importance plot for all classes in one graph
+n_classes = abs_coefficients.shape[0]
+
+
+plt.figure(figsize=(12, 8))
+
+
+# Set up colors for each class
+colors = plt.cm.Set1(np.linspace(0, 1, n_classes))
+
+for i in range(n_classes):
+    plt.barh(np.arange(len(feature_names)) + i * 0.2, abs_coefficients[i, :], height=0.2, label=f'Class {i}', color=colors[i])
+
+plt.xlabel('Absolute Coefficient Value')
+plt.ylabel('Feature Names')
+plt.yticks(np.arange(len(feature_names)), feature_names)
+plt.title('Feature Importance for All Classes')
+plt.gca().invert_yaxis()  # Invert the y-axis to display the most important features at the top
+plt.legend()
+plt.show()
