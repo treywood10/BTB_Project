@@ -405,6 +405,10 @@ bourbon.rename(columns={'B2_lag': 'Bourbon_2_lag'}, inplace=True)
 bourbon = bourbon.replace(np.nan, 'No Extra')
 
 
+# Drop Bourbon binary #
+bourbon = bourbon.drop(['Blantons', 'Closed', 'Eagle Rare', 'Other', 'Taylor', 'Weller'], axis = 1)
+
+
 #
 #### Save Data
 #

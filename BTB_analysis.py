@@ -12,10 +12,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import f1_score
 from bayes_opt import BayesianOptimization
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+
 
 
 
@@ -32,12 +35,13 @@ del f
 # Set seed. Selected 90 for the proof of Buffalo Trace Flagship bourbon #
 seed = 90
 
+
 # Import csv #
 bourbon = pd.read_csv('bourbon_data.csv')
 
 
 # Drop closed time, oak time, and sazerac time #
-bourbon = bourbon.drop(['Closed_time', 'Oak_time', 'Sazerac_time'], axis = 1)
+bourbon = bourbon.drop(['Closed_time', 'Date'], axis = 1)
 
 
 # Make matrix to compare models #
@@ -48,14 +52,11 @@ train_compare = pd.DataFrame(columns = ['Model', 'F1', 'hypers'])
 #### Train-Test Split
 #
 
-# List of targets #
-#targets = ['Blantons', 'Eagle Rare', 'Taylor', 'Weller']
-
-
 # Split data #
-X_train, X_test, y_train, y_test = train_test_split(bourbon.drop('Bourbon', axis = 1), 
-                                                    bourbon['Bourbon'],
+X_train, X_test, y_train, y_test = train_test_split(bourbon.drop('Bourbon_1', axis = 1), 
+                                                    bourbon['Bourbon_1'],
                                                     test_size = 0.2,
+                                                    stratify = bourbon['Bourbon_1'],
                                                     random_state = seed)
 
 
@@ -64,7 +65,7 @@ X_train, X_test, y_train, y_test = train_test_split(bourbon.drop('Bourbon', axis
 #
 
 # Variables to categorize #
-cat_vars = ['Year', 'Month', 'Weekday']
+cat_vars = ['Year', 'Month', 'Weekday', 'Bourbon_1_lag', 'Bourbon_2_lag']
 
 
 # Categorical pipeline #
@@ -74,7 +75,7 @@ cat_pipe = Pipeline([
 
 
 # Numerical variables #
-num_vars = ['Day', 'Blantons_time', 'Eagle Rare_time', 'Taylor_time', 'Weller_time', 'temp']
+num_vars = ['Day', 'Blantons_time', 'Eagle Rare_time', 'Taylor_time', 'Weller_time', 'Other_time', 'temp']
 
 
 # Numerical pipeline #
@@ -151,10 +152,11 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
             model = LogisticRegression(C=C, penalty=penalty, solver='saga',
                                        l1_ratio=l1_ratio, random_state=seed,
                                        max_iter=20000)
-        else:
-            model = LogisticRegression(C=C, penalty=penalty,
-                                       solver='saga', random_state=seed,
-                                       max_iter=20000)
+        
+        else: 
+            model = LogisticRegression(C=C, penalty=penalty, solver='saga',
+                                           random_state=seed,
+                                           max_iter=20000)
 
         # Cross validation #
         pred = cross_val_predict(model, X_train, y_train, cv = 5)
@@ -182,10 +184,6 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
 
     if best_hypers['penalty'] != 'elasticnet':
         best_hypers.pop('l1_ratio')
-        
-    if best_hypers['penalty'] == 'elasticnet':
-        best_hypers['solver'] = 'saga'
-
     
     # Multiclass option #
     if best_hypers['multi_class'] < 0.5:
@@ -194,23 +192,22 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
         best_hypers['multi_class'] = 'multinomial'
         
 
-    best_model = LogisticRegression(**best_hypers, max_iter=20000)
+    best_model = LogisticRegression(**best_hypers, solver = 'saga', max_iter=20000)
     
-    return best_f1, best_model, best_hypers
+    return best_f1, best_model
     
 
 # Define the search space #
 pbounds = {
-    'C' : (0.00001, 10),
+    'C' : (0.00001, 5),
     'penalty' : (0, 1),
-    'l1_ratio' : (0.01, 0.99),
+    'l1_ratio' : (0.1, 0.9),
     'multi_class' : (0, 1)
 }
 
-best_f1, best_model, hypes = log_tuning(X_train, y_train, 
+best_f1, best_model = log_tuning(X_train, y_train, 
                                  pbounds, n_init = 25, 
-                                 n_iter = 5, seed = seed)
-
+                                 n_iter = 75, seed = seed)
 
 
 # Fill comparison matrix #
@@ -221,41 +218,235 @@ train_compare = pd.concat([train_compare,
                           ignore_index = True)
 
 
+#
+#### Support Vector Machine
+#
+
+# Objective function for SVM #
+def svm_tuning(X_train, y_train, pbounds, n_init, n_iter, seed): 
+    def obj_svm(C, kernel, degree, gamma, shrinking):
+        """
+        Function for bayesian search of best hyperparameters. 
+
+        Parameters
+        ----------
+        C : float
+            Regularization strenth. Smaller values, stronger reg.
+        kernel : string
+            Kernel type for algorithm.
+        degree : int
+            Degree of polynomial function for 'poly' kernel.
+        gamma : string
+            Kernel coefficient for non-linear kernels.
+        shrinking : bool
+            Use shrinking heuristic.
+
+        Returns
+        -------
+        f_score : float
+            F1 score to measure model performance.
+
+        """
+    
+        # Kernel #
+        if kernel <= 1:
+            kernel = 'linear'
+        elif kernel <= 2:
+            kernel = 'poly'
+        elif kernel <= 3:
+            kernel = 'rbf'
+        else:
+            kernel = 'sigmoid'
+    
+        # Gamma #
+        if gamma <= 0.5:
+            gamma = 'scale'
+        else:
+            gamma = 'auto'
+    
+        # Shrinking #
+        shrinking = bool(round(shrinking))
+    
+        # Instantiate modlel #
+        model = SVC(C = C, kernel = kernel,
+                    degree = int(degree), gamma = gamma,
+                    shrinking = shrinking, random_state = seed)
+    
+        # Cross validation #
+        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+    
+        # F1 Score #
+        f_score = f1_score(y_train, pred, average = 'weighted')
+    
+        return f_score
+    
+    optimizer = BayesianOptimization(f = obj_svm, pbounds = pbounds,
+                                     random_state = seed)
+    optimizer.maximize(init_points = n_init, n_iter = n_iter)
+    
+    
+    # Pull best info #
+    best_hypers = optimizer.max['params']
+    best_f1 = optimizer.max['target']
 
 
-# Fit the best logistic regression model to your data
-best_model.fit(X_train, y_train)
+    # Adjust hypers #
+    if best_hypers['kernel'] <= 1:
+        best_hypers['kernel']  = 'linear'
+    elif best_hypers['kernel']  <= 2:
+        best_hypers['kernel']  = 'poly'
+    elif best_hypers['kernel']  <= 3:
+        best_hypers['kernel']  = 'rbf'
+    else:
+        best_hypers['kernel']  = 'sigmoid'
+        
+    if best_hypers['gamma']  <= 0.5:
+        best_hypers['gamma'] = 'scale'
+    else:
+        best_hypers['gamma'] = 'auto'
+        
+    best_hypers['shrinking'] = bool(round(best_hypers['shrinking']))
+    
+    best_hypers['degree'] = round(best_hypers['degree'])
+
+    best_model = SVC(**best_hypers)
+    
+    return best_f1, best_model 
+
+# Set search space # 
+pbounds = {
+    'C' : (0.00001, 1),
+    'kernel' : (0, 4),
+    'degree' : (1, 5),
+    'gamma' : (0, 1),
+    'shrinking': (0, 1)}
 
 
-# Get list of coefficients #
-coefficients = best_model.coef_  # This will be a 2D array with shape (n_classes, n_features)
+best_f1, best_model = svm_tuning(X_train, y_train, 
+                                 pbounds, n_init = 25, 
+                                 n_iter = 75, seed = seed)
+
+# Fill comparison matrix #
+train_compare = pd.concat([train_compare,
+                           pd.DataFrame({'Model' : 'SVM',
+                            'F1': best_f1,
+                            'hypers': [best_model]})], 
+                          ignore_index = True)
 
 
-# Get the absolute values of coefficients for each class
-abs_coefficients = np.abs(coefficients)
+# Objective function for random forest #
+def rf_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
+    def obj_forest(n_estimators, criterion,
+                   max_depth, max_features,
+                   bootstrap) :
+        """
+        Function for bayesian search of best hyperparameters. 
+
+        Parameters
+        ----------
+        n_estimators : int
+            Number of trees in forest.
+        criterion : string
+            Function to measure quality of split.
+        max_depth : int
+            Max tree depth.
+        max_features : string
+            Number of features to include.
+        bootstrap : bool
+            Whether to bootstrap samples for trees.
+
+        Returns
+        -------
+        f_score : float
+            F1 score to measure model performance.
+        
+        """
+    
+        # Vary criterion #
+        if criterion <= 1:
+            criterion = 'gini'
+        elif criterion <= 2:
+            criterion = 'entropy'
+        else:
+            criterion = 'log_loss'
+    
+        # Vary max features #
+        if max_features <= 1:
+            max_features = 'sqrt'
+        else:
+            max_features = 'log2'
+        
+        # Vary bootstrap #
+        bootstrap = bool(round(bootstrap))
+    
+        # Instantiate modlel #
+        model = RandomForestClassifier(n_estimators = int(n_estimators),
+                                       criterion = criterion, 
+                                       max_depth =  int(max_depth), 
+                                       max_features = max_features,
+                                       bootstrap = bootstrap)
+    
+        # Cross validation #
+        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+    
+        # F1 Score #
+        f_score = f1_score(y_train, pred, average = 'weighted')
+    
+        return f_score
+    
+    # Set optimizer #
+    optimizer = BayesianOptimization(f = obj_forest, pbounds = pbounds,
+                                     random_state = seed)
 
 
-# Get the feature names (assuming you have them in a list)
-feature_names = X_train.columns.tolist()
+    # Call maximizer #
+    optimizer.maximize(init_points = n_init, n_iter = n_iter)
+
+    # Pull best info #
+    best_hypers = optimizer.max['params']
+    best_f1 = optimizer.max['target']
 
 
-# Create a feature importance plot for all classes in one graph
-n_classes = abs_coefficients.shape[0]
+    # Adjust hypers #
+    best_hypers['n_estimators'] = round(best_hypers['n_estimators'])
+
+    best_hypers['max_depth'] = round(best_hypers['max_depth'])
+
+    if best_hypers['criterion'] <= 1:
+        best_hypers['criterion'] = 'gini'
+    elif best_hypers['criterion'] <= 2:
+        best_hypers['criterion'] = 'entropy'
+    else:
+        best_hypers['criterion'] = 'log_loss'
+        
+    if best_hypers['max_features'] <= 1:
+        best_hypers['max_features'] = 'sqrt'
+    else:
+        best_hypers['max_features'] = 'log2'
+            
+    best_hypers['bootstrap'] = bool(round(best_hypers['bootstrap']))   
+
+    best_model = RandomForestClassifier(**best_hypers)
+    
+    return best_f1, best_model
+
+# Set search space #
+pbounds = {
+    'n_estimators' : (50, 1000),
+    'criterion' : (0, 3),
+    'max_depth' : (3, 8),
+    'max_features' : (0, 2),
+    'bootstrap' : (0, 1)
+}
 
 
-plt.figure(figsize=(12, 8))
+best_f1, best_model = rf_tuning(X_train, y_train, 
+                                 pbounds, n_init = 25, 
+                                 n_iter = 75, seed = seed)
 
-
-# Set up colors for each class
-colors = plt.cm.Set1(np.linspace(0, 1, n_classes))
-
-for i in range(n_classes):
-    plt.barh(np.arange(len(feature_names)) + i * 0.2, abs_coefficients[i, :], height=0.2, label=f'Class {i}', color=colors[i])
-
-plt.xlabel('Absolute Coefficient Value')
-plt.ylabel('Feature Names')
-plt.yticks(np.arange(len(feature_names)), feature_names)
-plt.title('Feature Importance for All Classes')
-plt.gca().invert_yaxis()  # Invert the y-axis to display the most important features at the top
-plt.legend()
-plt.show()
+# Fill comparison matrix #
+train_compare = pd.concat([train_compare,
+                           pd.DataFrame({'Model' : 'Random Forest',
+                            'F1': best_f1,
+                            'hypers': [best_model]})], 
+                          ignore_index = True)
