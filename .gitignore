@@ -1,2 +1,5 @@
 analysis_extra.py
 .idea
+
+# No images
+*.png
