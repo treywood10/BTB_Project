@@ -88,7 +88,6 @@ del urls
 # Set datatime #
 bourbon['Date'] = pd.to_datetime(bourbon['Date'])
 
-
 #
 #### Get Up to Date ####
 #
@@ -108,7 +107,12 @@ def get_update(x):
         Updated bourbon dataframe.
 
     """
-
+    if x['Date'].max() < pd.to_datetime('2024-01-01 00:00:00'):
+        missing = pd.DataFrame({'Date': pd.to_datetime('2024-01-01 00:00'),
+                            'DOW': 'MON',
+                            'B1': 'Closed',
+                            'B2': ' '}, index = [0])
+        x = pd.concat([x, missing])
     # while x['Date'].max() < datetime.now():
     while x['Date'].max() < datetime.now():
 
