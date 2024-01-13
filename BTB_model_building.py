@@ -31,7 +31,6 @@ from tensorflow.keras.callbacks import EarlyStopping
 from keras.utils import np_utils
 import tensorflow as tf
 
-
 #
 #### Import dataset 
 #
@@ -52,12 +51,19 @@ n_iter = 150
 
 
 # Import csv #
-bourbon = pd.read_csv('bourbon_data2.csv')
+bourbon = pd.read_csv('bourbon_data.csv')
+bourbon = bourbon.sort_values('Date', ascending = False)
 
 
 # Drop closed time, date #
 #bourbon = bourbon.drop(['Closed_time', 'Date'], axis = 1)
-bourbon = bourbon.drop(['Date', 'temp'], axis = 1)
+#bourbon = bourbon.drop(['Date', 'temp'], axis = 1)
+bourbon = bourbon.drop(['Date', 'temp', 'Day', 'Month'], axis = 1)
+
+
+bourbon_pred = pd.DataFrame(bourbon.iloc[0]).transpose()
+bourbon_pred = bourbon_pred.drop('Bourbon_tomorrow', axis = 1)
+bourbon = bourbon.dropna()
 
 # Make matrix to compare models #
 train_compare = pd.DataFrame(columns = ['Model', 'Train_F1', 'Test_F1', 'Model_Specs'])
@@ -68,10 +74,10 @@ train_compare = pd.DataFrame(columns = ['Model', 'Train_F1', 'Test_F1', 'Model_S
 #
 
 # Split data #
-X_train, X_test, y_train, y_test = train_test_split(bourbon.drop('Bourbon_1', axis = 1), 
-                                                    bourbon['Bourbon_1'],
+X_train, X_test, y_train, y_test = train_test_split(bourbon.drop('Bourbon_tomorrow', axis = 1), 
+                                                    bourbon['Bourbon_tomorrow'],
                                                     test_size = 0.2,
-                                                    stratify = bourbon['Bourbon_1'],
+                                                    stratify = bourbon['Bourbon_tomorrow'],
                                                     random_state = seed)
 
 
@@ -80,7 +86,10 @@ X_train, X_test, y_train, y_test = train_test_split(bourbon.drop('Bourbon_1', ax
 #
 
 # Variables to categorize #
-cat_vars = ['Year', 'Month', 'Weekday', 'Bourbon_1_lag', 'Bourbon_2_lag']
+#cat_vars = ['Year', 'Month', 'Weekday',
+#            'Bourbon_today', 'Bourbon_1_lag', 'Bourbon_2_lag']
+cat_vars = ['Year', 'Weekday',
+            'Bourbon_today', 'Bourbon_1_lag', 'Bourbon_2_lag']
 
 
 # Categorical pipeline #
@@ -90,9 +99,8 @@ cat_pipe = Pipeline([
 
 
 # Numerical variables #
-#num_vars = ['Day', 'Blantons_time', 'Eagle Rare_time', 'Taylor_time', 'Weller_time', 'Other_time', 'temp']
-num_vars = ['Day', 'Blantons_time', 'Eagle Rare_time', 'Taylor_time', 'Weller_time']
-
+#num_vars = ['Day', 'Blantons_time', 'Eagle Rare_time', 'Taylor_time', 'Weller_time']
+num_vars = ['Blantons_time', 'Eagle Rare_time', 'Taylor_time', 'Weller_time']
 
 # Numerical pipeline #
 num_pipe = Pipeline([
@@ -104,7 +112,7 @@ num_pipe = Pipeline([
 preprocess = ColumnTransformer([
     ('num', num_pipe, num_vars),
     ('cat', cat_pipe, cat_vars)],
-    remainder = 'drop',
+    remainder = 'passthrough',
     verbose_feature_names_out = False)
 
 X_train = pd.DataFrame(
@@ -119,15 +127,18 @@ X_test = pd.DataFrame(
 
 
 # Clear variables #
-del cat_pipe, cat_vars, num_pipe, num_vars, preprocess
+del cat_pipe, cat_vars, num_pipe, num_vars
 
+labeler = LabelEncoder()
+y_train_encode = labeler.fit_transform(y_train)
+y_test_encode = labeler.transform(y_test)
 
 #
 #### Logistic Regression
 #
 
 # Objective function for Logistic Regression #
-def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
+def log_tuning(X_train, y_train_encode, pbounds, n_init, n_iter, seed):
     def obj_log(penalty, C, l1_ratio, multi_class):
         """
         Function for bayesian search of best hyperparameters. 
@@ -175,15 +186,15 @@ def log_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
                                            max_iter=20000)
 
         # Cross validation #
-        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+        pred = cross_val_predict(model, X_train, y_train_encode, cv = 5)
 
         # F1 Score #
-        f_score = f1_score(y_train, pred, average = 'weighted')
+        f_score = f1_score(y_train_encode, pred, average = 'weighted')
 
         return f_score
     
     optimizer = BayesianOptimization(f = obj_log, pbounds = pbounds,
-                                     random_state = seed)
+                                     random_state = seed, allow_duplicate_points = True)
     optimizer.maximize(init_points = n_init, n_iter = n_iter)
 
     # Pull best info #
@@ -223,7 +234,7 @@ pbounds = {
 
 
 # Optimize model #
-best_f1, best_model = log_tuning(X_train, y_train, 
+best_f1, best_model = log_tuning(X_train, y_train_encode,
                                  pbounds, n_init = n_init, 
                                  n_iter = n_iter, seed = seed)
 
@@ -232,8 +243,8 @@ beep(6)
 
 
 # Generate test score #
-best_model.fit(X_train, y_train)
-test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
+best_model.fit(X_train, y_train_encode)
+test_f1 = f1_score(y_test_encode, best_model.predict(X_test), average = 'weighted')
 
 
 # Fill comparison matrix #
@@ -250,7 +261,7 @@ scorer = make_scorer(f1_score, average='weighted')
 
 
 # Calculate permutation importance using 'f1_micro' as the scoring metric
-perm_log = permutation_importance(best_model, X_train, y_train, n_repeats=10,
+perm_log = permutation_importance(best_model, X_train, y_train_encode, n_repeats=10,
                               random_state=seed, scoring=scorer, n_jobs=2)
 
 
@@ -283,7 +294,7 @@ plt.show()
 #
 
 # Objective function for SVM #
-def svm_tuning(X_train, y_train, pbounds, n_init, n_iter, seed): 
+def svm_tuning(X_train, y_train_encode, pbounds, n_init, n_iter, seed): 
     def obj_svm(C, kernel, degree, gamma, shrinking):
         """
         Function for bayesian search of best hyperparameters. 
@@ -330,18 +341,19 @@ def svm_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
         # Instantiate modlel #
         model = SVC(C = C, kernel = kernel,
                     degree = int(degree), gamma = gamma,
-                    shrinking = shrinking, random_state = seed)
+                    shrinking = shrinking, random_state = seed,
+                    probability = True)
     
-        # Cross validation #
-        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+        pred_proba = cross_val_predict(model, X_train, y_train_encode, cv=5, method='predict_proba')
+        pred = np.argmax(pred_proba, axis=1)  # Choose the class with the highest probability
     
         # F1 Score #
-        f_score = f1_score(y_train, pred, average = 'weighted')
+        f_score = f1_score(y_train_encode, pred, average = 'weighted')
     
         return f_score
     
     optimizer = BayesianOptimization(f = obj_svm, pbounds = pbounds,
-                                     random_state = seed)
+                                     random_state = seed, allow_duplicate_points = True)
     optimizer.maximize(init_points = n_init, n_iter = n_iter)
     
     
@@ -369,7 +381,7 @@ def svm_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
     
     best_hypers['degree'] = round(best_hypers['degree'])
 
-    best_model = SVC(**best_hypers)
+    best_model = SVC(**best_hypers, probability = True)
     
     return best_f1, best_model 
 
@@ -383,7 +395,7 @@ pbounds = {
 
 
 # Optimize model #
-best_f1, best_model = svm_tuning(X_train, y_train, 
+best_f1, best_model = svm_tuning(X_train, y_train_encode, 
                                  pbounds, n_init = n_init, 
                                  n_iter = n_iter, seed = seed)
 
@@ -393,8 +405,8 @@ beep(6)
 
 
 # Generate test score #
-best_model.fit(X_train, y_train)
-test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
+best_model.fit(X_train, y_train_encode)
+test_f1 = f1_score(y_test_encode, best_model.predict(X_test), average = 'weighted')
 
 
 # Fill comparison matrix #
@@ -411,7 +423,7 @@ scorer = make_scorer(f1_score, average='weighted')
 
 
 # Calculate permutation importance using 'f1_micro' as the scoring metric
-perm_svm = permutation_importance(best_model, X_train, y_train, n_repeats=10,
+perm_svm = permutation_importance(best_model, X_train, y_train_encode, n_repeats=10,
                               random_state=seed, scoring=scorer, n_jobs=2)
 
 
@@ -444,7 +456,7 @@ plt.show()
 #
 
 # Objective function for random forest #
-def rf_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
+def rf_tuning(X_train, y_train_encode, pbounds, n_init, n_iter, seed):
     def obj_forest(n_estimators, criterion,
                    max_depth, max_features,
                    bootstrap) :
@@ -496,16 +508,16 @@ def rf_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
                                        bootstrap = bootstrap)
     
         # Cross validation #
-        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+        pred = cross_val_predict(model, X_train, y_train_encode, cv = 5)
     
         # F1 Score #
-        f_score = f1_score(y_train, pred, average = 'weighted')
+        f_score = f1_score(y_train_encode, pred, average = 'weighted')
     
         return f_score
     
     # Set optimizer #
     optimizer = BayesianOptimization(f = obj_forest, pbounds = pbounds,
-                                     random_state = seed)
+                                     random_state = seed, allow_duplicate_points = True)
 
 
     # Call maximizer #
@@ -551,7 +563,7 @@ pbounds = {
 
 
 # Optimize model #
-best_f1, best_model = rf_tuning(X_train, y_train, 
+best_f1, best_model = rf_tuning(X_train, y_train_encode,
                                  pbounds, n_init = n_init, 
                                  n_iter = n_iter, seed = seed)
 
@@ -561,8 +573,8 @@ beep(6)
 
 
 # Generate test score #
-best_model.fit(X_train, y_train)
-test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
+best_model.fit(X_train, y_train_encode)
+test_f1 = f1_score(y_test_encode, best_model.predict(X_test), average = 'weighted')
 
 
 # Fill comparison matrix #
@@ -579,7 +591,7 @@ scorer = make_scorer(f1_score, average='weighted')
 
 
 # Calculate permutation importance using 'f1_micro' as the scoring metric
-perm_rf = permutation_importance(best_model, X_train, y_train, n_repeats=10,
+perm_rf = permutation_importance(best_model, X_train, y_train_encode, n_repeats=10,
                               random_state=seed, scoring=scorer, n_jobs=2)
 
 
@@ -610,12 +622,6 @@ plt.show()
 #
 #### XGBoost
 #
-
-# Fix target values for XGBoost #
-labeler = LabelEncoder()
-y_train_encode = labeler.fit_transform(y_train)
-y_test_encode = labeler.transform(y_test)
-
 
 # Objective function for XGBoost #
 def boost_tuning(X_train, y_train_encode, pbounds, n_init, n_iter, seed):
@@ -672,7 +678,7 @@ def boost_tuning(X_train, y_train_encode, pbounds, n_init, n_iter, seed):
 
     # Set optimizer #
     optimizer = BayesianOptimization(f = obj_xgb, pbounds = pbounds,
-                                     random_state = seed)
+                                     random_state = seed, allow_duplicate_points = True)
 
 
     # Call maximizer #
@@ -768,7 +774,7 @@ plt.show()
 #
 
 # Objective function for KNN #
-def knn_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
+def knn_tuning(X_train, y_train_encode, pbounds, n_init, n_iter, seed):
     def obj_knn(n_neighbors, weights, algorithm, leaf_size, p):
         
         """
@@ -829,14 +835,14 @@ def knn_tuning(X_train, y_train, pbounds, n_init, n_iter, seed):
                                      n_jobs = 2)
         
         # Cross validation #
-        pred = cross_val_predict(model, X_train, y_train, cv = 5)
+        pred = cross_val_predict(model, X_train, y_train_encode, cv = 5)
         
         # F1 Score #
-        f_score = f1_score(y_train, pred, average = 'weighted')
+        f_score = f1_score(y_train_encode, pred, average = 'weighted')
         
         return f_score
 
-    optimizer = BayesianOptimization(f=obj_knn, pbounds=pbounds, random_state=seed)
+    optimizer = BayesianOptimization(f=obj_knn, pbounds=pbounds, random_state=seed, allow_duplicate_points = True)
     optimizer.maximize(init_points=n_init, n_iter=n_iter)
     
     best_hypers = optimizer.max['params']
@@ -878,7 +884,7 @@ pbounds = {
 
 
 # Optimize model #
-best_f1, best_model = knn_tuning(X_train, y_train, 
+best_f1, best_model = knn_tuning(X_train, y_train_encode,
                                  pbounds, n_init = n_init, 
                                  n_iter = n_iter, seed = seed)
 
@@ -888,8 +894,8 @@ beep(6)
 
 
 # Generate test score #
-best_model.fit(X_train, y_train)
-test_f1 = f1_score(y_test, best_model.predict(X_test), average = 'weighted')
+best_model.fit(X_train, y_train_encode)
+test_f1 = f1_score(y_test_encode, best_model.predict(X_test), average = 'weighted')
 
 
 # Fill comparison matrix #
@@ -906,7 +912,7 @@ scorer = make_scorer(f1_score, average='weighted')
 
 
 # Calculate permutation importance using 'f1_micro' as the scoring metric
-perm_knn = permutation_importance(best_model, X_train, y_train, n_repeats=10,
+perm_knn = permutation_importance(best_model, X_train, y_train_encode, n_repeats=10,
                               random_state=seed, scoring=scorer, n_jobs=2)
 
 
@@ -933,24 +939,16 @@ plt.title("Permutation Importance for Each Feature (Sorted)")
 plt.savefig('Importances/KNN.png')
 plt.show()
 
-
-
 #
 #### Neural Net 
 #
 
 # Fix target values for XGBoost #
-labeler = LabelEncoder()
-y_train_encode = labeler.fit_transform(y_train)
 y_train_dums = np_utils.to_categorical(y_train_encode)
-
-y_test_encode = labeler.transform(y_test)
 y_test_dums = np_utils.to_categorical(y_test_encode)
-
 
 # Set the random seed for TensorFlow #
 tf.random.set_seed(seed)
-
 
 # Create optimizer function #
 def net_tuning(X_train, y_train_dums, pbounds, n_init, n_iter, seed):
@@ -1052,7 +1050,7 @@ def net_tuning(X_train, y_train_dums, pbounds, n_init, n_iter, seed):
         return f_score
     
 
-    optimizer = BayesianOptimization(f=obj_net, pbounds=pbounds, random_state=seed)
+    optimizer = BayesianOptimization(f=obj_net, pbounds=pbounds, random_state=seed, allow_duplicate_points = True)
     optimizer.maximize(init_points=n_init, n_iter=n_iter)
 
     # Pull best info #
@@ -1120,7 +1118,7 @@ pbounds = {
     'activation': (0, 1),
     'learning_rate': (0.0001, 0.3),
     'num_hidden_layers': (1, 200),
-    'num_nodes': (1, 50),
+    'num_nodes': (1, 100),
 }
 
 # Optimize model #
@@ -1197,7 +1195,6 @@ train_compare = pd.concat([train_compare,
                             'Model_Specs': [stack]})], 
                           ignore_index = True).sort_values('Test_F1', ascending = False)
 
-
 #
 #### Save best model 
 #
@@ -1205,6 +1202,21 @@ train_compare = pd.concat([train_compare,
 # Pull best model #
 best_model = train_compare['Model_Specs'].iloc[0]
 
+
+bourbon_pred_trans = pd.DataFrame(
+    preprocess.transform(bourbon_pred),
+    columns = preprocess.get_feature_names_out(),
+    index = bourbon_pred.index)
+
+
+preds = best_model.predict_proba(bourbon_pred_trans)
+
+
+classes = labeler.classes_
+
+
+# Create a DataFrame with class labels and corresponding probabilities
+result_df = pd.DataFrame(preds, columns=classes)
 
 # Pickle best model #
 with open('bourbon_model.pkl', 'wb') as file:
