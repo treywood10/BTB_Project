@@ -16,7 +16,7 @@ bourbon = bourbon.sort_values('Date', ascending = False)
 # Grab tomorrow's date #
 bourbon['Date'] = pd.to_datetime(bourbon['Date'])
 date = bourbon['Date'].iloc[0] + timedelta(days=1)
-date = date.strftime('%Y-%m-%d')
+date = date.strftime('%m-%d-%Y')
 
 # Drop closed time, date #
 bourbon = bourbon.drop(['Date', 'temp', 'Day', 'Month'], axis = 1)
