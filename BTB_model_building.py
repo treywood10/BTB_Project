@@ -56,10 +56,7 @@ bourbon = bourbon.sort_values('Date', ascending = False)
 
 
 # Drop closed time, date #
-#bourbon = bourbon.drop(['Closed_time', 'Date'], axis = 1)
-#bourbon = bourbon.drop(['Date', 'temp'], axis = 1)
 bourbon = bourbon.drop(['Date', 'temp', 'Day', 'Month'], axis = 1)
-
 
 bourbon_pred = pd.DataFrame(bourbon.iloc[0]).transpose()
 bourbon_pred = bourbon_pred.drop('Bourbon_tomorrow', axis = 1)
@@ -1221,3 +1218,11 @@ result_df = pd.DataFrame(preds, columns=classes)
 # Pickle best model #
 with open('bourbon_model.pkl', 'wb') as file:
     pickle.dump(best_model, file)
+
+# Pickle preprocessor #
+with open('preprocess.pkl', 'wb') as file:
+    pickle.dump(preprocess, file)
+
+# Pickle encoder #
+with open('labeler.pkl', 'wb') as file:
+    pickle.dump(labeler, file)
