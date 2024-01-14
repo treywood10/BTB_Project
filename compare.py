@@ -8,11 +8,6 @@ import re
 
 # Import dataset #
 
-# Run script to update dataset #
-with open ('BTB_make_data.py') as f:
-    exec(f.read())
-del f
-
 # Import bourbon csv #
 bourbon = pd.read_csv('bourbon_data.csv')
 bourbon = bourbon.sort_values('Date', ascending = False)
