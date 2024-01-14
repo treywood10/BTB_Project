@@ -4,4 +4,4 @@ Welcoeme to my repository! In this project, I try to predict which bourbon is mo
 
 The model is currently running and providing predictions. Over the next few days, I plan to track current model performance. Below, you can find the probability of each bourbon for tomorrow. The figure updates each day at 12pm EST. I'm currently working out potential issues in the daily workflow. 
 
-![Gift Shop Bourbon Probabilities](Pred_plot.png){: .center}
+![Gift Shop Bourbon Probabilities](Pred_plot.png){: style="display: block; margin: 0 auto;"}
