@@ -13,6 +13,11 @@ import re
 bourbon = pd.read_csv('bourbon_data.csv')
 bourbon = bourbon.sort_values('Date', ascending = False)
 
+# Grab tomorrow's date #
+bourbon['Date'] = pd.to_datetime(bourbon['Date'])
+date = bourbon['Date'].iloc[0] + timedelta(days=1)
+date = date.strftime('%Y-%m-%d')
+
 # Drop closed time, date #
 bourbon = bourbon.drop(['Date', 'temp', 'Day', 'Month'], axis = 1)
 
@@ -50,7 +55,7 @@ probs.columns = ['Bourbon', 'Probability']
 probs = probs.sort_values(by='Probability', ascending=False)
 sns.catplot(x='Bourbon', y='Probability', data = probs, kind='bar')
 plt.subplots_adjust(top=0.94)  # Adjust the value as needed
-plt.title('Gift Shop Bourbon Probabilities')
+plt.title(f'Gift Shop Bourbon Probabilities - {date}')
 plt.savefig('Pred_plot.png')
 plt.show()
 
