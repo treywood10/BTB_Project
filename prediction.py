@@ -54,6 +54,7 @@ probs = result_df.transpose().reset_index()
 probs.columns = ['Bourbon', 'Probability']
 probs = probs.sort_values(by='Probability', ascending=False)
 sns.catplot(x='Bourbon', y='Probability', data = probs, kind='bar')
+plt.xticks(fontsize = 9)
 plt.subplots_adjust(top=0.94)  # Adjust the value as needed
 plt.title(f'Gift Shop Bourbon Probabilities - {date}')
 plt.savefig('Pred_plot.png')
