@@ -45,10 +45,10 @@ jobs:
           git config --local user.email "totreywood@aol.com"
           git config --local user.name "treywood10"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
+          git commit -m "update data" -a
 
     - name: push changes
       uses: ad-m/github-push-action@v0.6.0
       with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main  
