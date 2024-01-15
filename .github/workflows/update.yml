@@ -1,8 +1,14 @@
 name: Daily Python Script
 
+#on:
+#  schedule:
+#    - cron: '0 17 * * *'  # This schedules the workflow to run every day at 12 pm EST (17:00 UTC)
+
 on:
-  schedule:
-    - cron: '0 17 * * *'  # This schedules the workflow to run every day at 12 pm EST (17:00 UTC)
+  push:
+    branches:
+      - main  # Set a branch name to trigger deployment
+  pull_request:
 
 jobs:
   run_script:
