@@ -1144,8 +1144,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-12-15,Blantons,2023,12,15,4,0,0,4,3,1,38.3,Taylor,Weller,No Extra
 2023-12-16,Taylor,2023,12,16,5,0,1,5,0,2,46.22,Weller,Blantons,No Extra
 2023-12-17,Weller,2023,12,17,6,0,2,6,1,0,49.1,Blantons,Taylor,No Extra
-2023-12-18,Blantons,2023,12,18,0,0,0,7,2,1,35.42,Eagle Rare,Weller,No Extra
-2023-12-18,Blantons,2023,12,18,0,0,0,7,2,1,35.42,Weller,Weller,No Extra
+2023-12-18,Blantons,2023,12,18,0,0,0,7,2,1,35.06,Eagle Rare,Weller,No Extra
+2023-12-18,Blantons,2023,12,18,0,0,0,7,2,1,35.06,Weller,Weller,No Extra
 2023-12-19,Weller,2023,12,19,1,1,1,0,3,0,27.68,Taylor,Blantons,No Extra
 2023-12-19,Eagle Rare,2023,12,19,1,1,1,0,3,0,27.68,Taylor,Blantons,No Extra
 2023-12-20,Taylor,2023,12,20,2,0,2,1,0,1,33.44,Blantons,Eagle Rare,Weller
@@ -1154,7 +1154,7 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-12-23,Weller,2023,12,23,5,0,2,4,1,0,49.64,Closed,Taylor,No Extra
 2023-12-26,Taylor,2023,12,26,1,0,5,7,0,3,49.46,Blantons,Closed,No Extra
 2023-12-27,Blantons,2023,12,27,2,0,0,8,1,4,39.92,Weller,Taylor,No Extra
-2023-12-28,Weller,2023,12,28,3,0,1,9,2,0,38.3,Taylor,Blantons,No Extra
+2023-12-28,Weller,2023,12,28,3,0,1,9,2,0,38.12,Taylor,Blantons,No Extra
 2023-12-29,Taylor,2023,12,29,4,0,2,10,0,1,36.5,Blantons,Weller,No Extra
 2023-12-30,Blantons,2023,12,30,5,0,0,11,1,2,37.22,Eagle Rare,Taylor,No Extra
 2023-12-31,Eagle Rare,2023,12,31,6,0,1,0,2,3,38.12,Closed,Blantons,No Extra
@@ -1170,5 +1170,5 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2024-01-11,Taylor,2024,1,11,3,0,3,2,0,1,39.56,Weller,Weller,No Extra
 2024-01-12,Weller,2024,1,12,4,0,4,3,1,0,42.8,Blantons,Taylor,No Extra
 2024-01-13,Blantons,2024,1,13,5,0,0,4,2,1,27.86,Eagle Rare,Weller,No Extra
-2024-01-14,Eagle Rare,2024,1,14,6,0,1,0,3,2,17.6,Blantons,Blantons,No Extra
-2024-01-15,Blantons,2024,1,15,0,0,0,1,4,3,16.34,,Eagle Rare,No Extra
+2024-01-14,Eagle Rare,2024,1,14,6,0,1,0,3,2,16.88,Blantons,Blantons,No Extra
+2024-01-15,Blantons,2024,1,15,0,0,0,1,4,3,14.54,,Eagle Rare,No Extra
