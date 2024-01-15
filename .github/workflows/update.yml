@@ -17,6 +17,15 @@ jobs:
       with:
         python-version: 3.9
 
+    - name: Install ALSA development files
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libasound2-dev
+
+    - name: Install simpleaudio
+      run: |
+        pip install simpleaudio
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
