@@ -20,6 +20,7 @@ date = date.strftime('%m-%d-%Y')
 
 # Drop closed time, date #
 bourbon = bourbon.drop(['Date', 'temp', 'Day', 'Month'], axis = 1)
+bourbon = bourbon.dropna()
 
 # Pull out prediction #
 bourbon_pred = pd.DataFrame(bourbon.iloc[0]).transpose()
@@ -35,6 +36,17 @@ with open('preprocess.pkl', 'rb') as file:
 with open('labeler.pkl', 'rb') as file:
     labeler = pickle.load(file)
 
+# Transform training data #
+y_train = labeler.transform(bourbon['Bourbon_tomorrow'])
+
+bourbon_t = bourbon.drop('Bourbon_tomorrow', axis = 1)
+
+X_train = pd.DataFrame(
+    preprocess.transform(bourbon),
+    columns = preprocess.get_feature_names_out(),
+    index = bourbon.index)
+
+model = model.fit(X_train, y_train)
 
 # Transform prediciton data #
 input = pd.DataFrame(
@@ -138,6 +150,6 @@ rows = rows.rename(columns = {'Bourbon' : 'Their_Prediction'})
 
 # Add to prediction frame #
 pred_df = pd.concat([pred_df, rows], axis = 1)
-
+ 
 # Write dataset to CSV #
 pred_df.to_csv('tom_predictions.csv', index=False)
