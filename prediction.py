@@ -20,7 +20,6 @@ date = date.strftime('%m-%d-%Y')
 
 # Drop closed time, date #
 bourbon = bourbon.drop(['Date', 'temp', 'Day', 'Month'], axis = 1)
-bourbon = bourbon.dropna()
 
 # Pull out prediction #
 bourbon_pred = pd.DataFrame(bourbon.iloc[0]).transpose()
@@ -37,14 +36,17 @@ with open('labeler.pkl', 'rb') as file:
     labeler = pickle.load(file)
 
 # Transform training data #
-y_train = labeler.transform(bourbon['Bourbon_tomorrow'])
+index_of_last_entry = bourbon.index[0]
+bourbon_t = bourbon.drop(index_of_last_entry, axis=0)
+bourbon_t = bourbon_t.dropna()
+y_train = labeler.transform(bourbon_t['Bourbon_tomorrow'])
 
-bourbon_t = bourbon.drop('Bourbon_tomorrow', axis = 1)
+bourbon_t = bourbon_t.drop('Bourbon_tomorrow', axis = 1)
 
 X_train = pd.DataFrame(
-    preprocess.transform(bourbon),
+    preprocess.transform(bourbon_t),
     columns = preprocess.get_feature_names_out(),
-    index = bourbon.index)
+    index = bourbon_t.index)
 
 model = model.fit(X_train, y_train)
 
