@@ -308,8 +308,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2021-09-20,Blantons,2021,9,20,0,0,0,1,2,2,71.24000000000001,Weller,Eagle Rare,No Extra
 2021-09-21,Weller,2021,9,21,1,0,1,2,3,0,71.06,Weller,Blantons,No Extra
 2021-09-21,Weller,2021,9,21,1,0,1,2,3,0,71.06,Eagle Rare,Blantons,No Extra
-2021-09-22,Eagle Rare,2021,9,22,2,1,2,0,4,0,61.7,Taylor,Weller,No Extra
 2021-09-22,Weller,2021,9,22,2,1,2,0,4,0,61.7,Taylor,Weller,No Extra
+2021-09-22,Eagle Rare,2021,9,22,2,1,2,0,4,0,61.7,Taylor,Weller,No Extra
 2021-09-23,Taylor,2021,9,23,3,0,3,1,0,1,58.1,Blantons,Eagle Rare,Weller
 2021-09-24,Blantons,2021,9,24,4,0,0,2,1,2,58.82,Eagle Rare,Taylor,No Extra
 2021-09-25,Eagle Rare,2021,9,25,5,0,1,0,2,3,59.36,Weller,Blantons,No Extra
@@ -318,8 +318,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2021-09-28,Eagle Rare,2021,9,28,1,0,4,0,1,2,72.32,Blantons,Taylor,No Extra
 2021-09-29,Blantons,2021,9,29,2,0,0,1,2,3,71.96,Taylor,Eagle Rare,No Extra
 2021-09-30,Taylor,2021,9,30,3,0,1,2,0,4,70.34,Eagle Rare,Blantons,No Extra
-2021-10-01,Eagle Rare,2021,10,1,4,0,2,0,1,5,64.4,Taylor,Taylor,No Extra
 2021-10-01,Eagle Rare,2021,10,1,4,0,2,0,1,5,64.4,Eagle Rare,Taylor,No Extra
+2021-10-01,Eagle Rare,2021,10,1,4,0,2,0,1,5,64.4,Taylor,Taylor,No Extra
 2021-10-02,Taylor,2021,10,2,5,1,3,0,0,6,68.0,Blantons,Eagle Rare,No Extra
 2021-10-02,Eagle Rare,2021,10,2,5,1,3,0,0,6,68.0,Blantons,Eagle Rare,No Extra
 2021-10-03,Blantons,2021,10,3,6,0,0,1,1,7,69.25999999999999,Weller,Taylor,Eagle Rare
@@ -672,27 +672,27 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2022-10-31,Taylor,2022,10,31,0,0,1,2,0,5,61.7,Weller,Blantons,No Extra
 2022-11-01,Weller,2022,11,1,1,0,2,3,1,0,57.379999999999995,Blantons,Taylor,No Extra
 2022-11-02,Blantons,2022,11,2,2,0,0,4,2,1,54.68,Eagle Rare,Weller,No Extra
-2022-11-03,Eagle Rare,2022,11,3,3,0,1,0,3,2,56.3,Blantons,Blantons,No Extra
 2022-11-03,Eagle Rare,2022,11,3,3,0,1,0,3,2,56.3,Other,Blantons,No Extra
+2022-11-03,Eagle Rare,2022,11,3,3,0,1,0,3,2,56.3,Blantons,Blantons,No Extra
 2022-11-04,Blantons,2022,11,4,4,1,0,1,4,3,62.959999999999994,Other,Eagle Rare,No Extra
 2022-11-04,Blantons,2022,11,4,4,1,0,1,4,3,62.959999999999994,Taylor,Eagle Rare,No Extra
 2022-11-05,Taylor,2022,11,5,5,1,1,2,0,4,68.54,Weller,Blantons,Other
-2022-11-06,Weller,2022,11,6,6,0,2,3,1,0,63.32,Other,Taylor,Other
 2022-11-06,Weller,2022,11,6,6,0,2,3,1,0,63.32,Eagle Rare,Taylor,Other
+2022-11-06,Weller,2022,11,6,6,0,2,3,1,0,63.32,Other,Taylor,Other
 2022-11-07,Eagle Rare,2022,11,7,0,1,3,0,2,1,58.1,Weller,Weller,No Extra
 2022-11-07,Eagle Rare,2022,11,7,0,1,3,0,2,1,58.1,Other,Weller,No Extra
 2022-11-08,Weller,2022,11,8,1,1,4,1,3,0,55.4,Blantons,Eagle Rare,Other
 2022-11-08,Weller,2022,11,8,1,1,4,1,3,0,55.4,Other,Eagle Rare,Other
-2022-11-09,Blantons,2022,11,9,2,1,0,2,4,1,57.02,Eagle Rare,Weller,Other
 2022-11-09,Blantons,2022,11,9,2,1,0,2,4,1,57.02,Other,Weller,Other
+2022-11-09,Blantons,2022,11,9,2,1,0,2,4,1,57.02,Eagle Rare,Weller,Other
 2022-11-10,Eagle Rare,2022,11,10,3,1,1,0,5,2,59.36,Taylor,Blantons,Other
 2022-11-10,Eagle Rare,2022,11,10,3,1,1,0,5,2,59.36,Other,Blantons,Other
 2022-11-11,Taylor,2022,11,11,4,1,2,1,0,3,58.64,Blantons,Eagle Rare,Other
 2022-11-11,Taylor,2022,11,11,4,1,2,1,0,3,58.64,Other,Eagle Rare,Other
-2022-11-12,Blantons,2022,11,12,5,1,0,2,1,4,35.96,Other,Taylor,Other
 2022-11-12,Blantons,2022,11,12,5,1,0,2,1,4,35.96,Weller,Taylor,Other
-2022-11-13,Weller,2022,11,13,6,1,1,3,2,0,33.44,Taylor,Blantons,Other
+2022-11-12,Blantons,2022,11,12,5,1,0,2,1,4,35.96,Other,Taylor,Other
 2022-11-13,Weller,2022,11,13,6,1,1,3,2,0,33.44,Other,Blantons,Other
+2022-11-13,Weller,2022,11,13,6,1,1,3,2,0,33.44,Taylor,Blantons,Other
 2022-11-14,Taylor,2022,11,14,0,1,2,4,0,1,36.86,Weller,Weller,Other
 2022-11-14,Taylor,2022,11,14,0,1,2,4,0,1,36.86,Other,Weller,Other
 2022-11-15,Weller,2022,11,15,1,1,3,5,1,0,39.92,Eagle Rare,Taylor,Other
@@ -707,8 +707,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2022-11-19,Eagle Rare,2022,11,19,5,1,2,0,5,1,27.86,Other,Weller,Other
 2022-11-20,Taylor,2022,11,20,6,1,3,1,0,2,26.060000000000002,Weller,Eagle Rare,Other
 2022-11-20,Taylor,2022,11,20,6,1,3,1,0,2,26.060000000000002,Other,Eagle Rare,Other
-2022-11-21,Weller,2022,11,21,0,1,4,2,1,0,31.28,Taylor,Taylor,Other
 2022-11-21,Weller,2022,11,21,0,1,4,2,1,0,31.28,Other,Taylor,Other
+2022-11-21,Weller,2022,11,21,0,1,4,2,1,0,31.28,Taylor,Taylor,Other
 2022-11-22,Taylor,2022,11,22,1,1,5,3,0,1,36.68,Eagle Rare,Weller,Other
 2022-11-22,Taylor,2022,11,22,1,1,5,3,0,1,36.68,Other,Weller,Other
 2022-11-23,Eagle Rare,2022,11,23,2,1,6,0,1,2,39.56,Closed,Taylor,Other
@@ -716,38 +716,38 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2022-11-25,Blantons,2022,11,25,4,1,0,2,3,4,49.82,Other,Closed,No Extra
 2022-11-26,Taylor,2022,11,26,5,1,1,3,0,5,42.44,Other,Blantons,Other
 2022-11-26,Taylor,2022,11,26,5,1,1,3,0,5,42.44,Weller,Blantons,Other
-2022-11-27,Weller,2022,11,27,6,1,2,4,1,0,51.98,Other,Taylor,Other
 2022-11-27,Weller,2022,11,27,6,1,2,4,1,0,51.98,Blantons,Taylor,Other
+2022-11-27,Weller,2022,11,27,6,1,2,4,1,0,51.98,Other,Taylor,Other
 2022-11-28,Blantons,2022,11,28,0,1,0,5,2,1,45.86,Weller,Weller,Other
 2022-11-28,Blantons,2022,11,28,0,1,0,5,2,1,45.86,Other,Weller,Other
 2022-11-29,Weller,2022,11,29,1,1,1,6,3,0,53.24,Taylor,Blantons,Other
 2022-11-29,Weller,2022,11,29,1,1,1,6,3,0,53.24,Other,Blantons,Other
 2022-11-30,Taylor,2022,11,30,2,1,2,7,0,1,41.72,Eagle Rare,Weller,Other
 2022-11-30,Taylor,2022,11,30,2,1,2,7,0,1,41.72,Other,Weller,Other
-2022-12-01,Eagle Rare,2022,12,1,3,1,3,0,1,2,30.56,Blantons,Taylor,Other
 2022-12-01,Eagle Rare,2022,12,1,3,1,3,0,1,2,30.56,Other,Taylor,Other
+2022-12-01,Eagle Rare,2022,12,1,3,1,3,0,1,2,30.56,Blantons,Taylor,Other
 2022-12-02,Blantons,2022,12,2,4,1,0,1,2,3,45.14,Weller,Eagle Rare,Other
 2022-12-02,Blantons,2022,12,2,4,1,0,1,2,3,45.14,Other,Eagle Rare,Other
-2022-12-03,Weller,2022,12,3,5,1,1,2,3,0,48.74,Other,Blantons,Other
 2022-12-03,Weller,2022,12,3,5,1,1,2,3,0,48.74,Taylor,Blantons,Other
-2022-12-04,Taylor,2022,12,4,6,1,2,3,0,1,31.1,Blantons,Weller,Other
+2022-12-03,Weller,2022,12,3,5,1,1,2,3,0,48.74,Other,Blantons,Other
 2022-12-04,Taylor,2022,12,4,6,1,2,3,0,1,31.1,Weller,Weller,Other
-2022-12-05,Blantons,2022,12,5,0,1,0,4,1,0,35.96,Weller,Taylor,Other
+2022-12-04,Taylor,2022,12,4,6,1,2,3,0,1,31.1,Blantons,Weller,Other
 2022-12-05,Weller,2022,12,5,0,1,0,4,1,0,35.96,Other,Taylor,Other
 2022-12-05,Weller,2022,12,5,0,1,0,4,1,0,35.96,Weller,Taylor,Other
+2022-12-05,Blantons,2022,12,5,0,1,0,4,1,0,35.96,Weller,Taylor,Other
 2022-12-05,Blantons,2022,12,5,0,1,0,4,1,0,35.96,Other,Taylor,Other
 2022-12-06,Weller,2022,12,6,1,1,1,5,2,0,54.86,Taylor,Blantons,Weller
 2022-12-06,Weller,2022,12,6,1,1,1,5,2,0,54.86,Other,Blantons,Weller
 2022-12-07,Taylor,2022,12,7,2,1,2,6,0,1,57.02,Blantons,Weller,Other
 2022-12-07,Taylor,2022,12,7,2,1,2,6,0,1,57.02,Other,Weller,Other
-2022-12-08,Blantons,2022,12,8,3,1,0,7,1,2,48.74,Eagle Rare,Taylor,Other
 2022-12-08,Blantons,2022,12,8,3,1,0,7,1,2,48.74,Other,Taylor,Other
-2022-12-09,Eagle Rare,2022,12,9,4,1,1,0,2,3,48.02,Other,Blantons,Other
+2022-12-08,Blantons,2022,12,8,3,1,0,7,1,2,48.74,Eagle Rare,Taylor,Other
 2022-12-09,Eagle Rare,2022,12,9,4,1,1,0,2,3,48.02,Weller,Blantons,Other
+2022-12-09,Eagle Rare,2022,12,9,4,1,1,0,2,3,48.02,Other,Blantons,Other
 2022-12-10,Weller,2022,12,10,5,1,2,1,3,0,45.5,Other,Eagle Rare,Other
 2022-12-10,Weller,2022,12,10,5,1,2,1,3,0,45.5,Blantons,Eagle Rare,Other
-2022-12-11,Blantons,2022,12,11,6,1,0,2,4,1,45.14,Other,Weller,Other
 2022-12-11,Blantons,2022,12,11,6,1,0,2,4,1,45.14,Weller,Weller,Other
+2022-12-11,Blantons,2022,12,11,6,1,0,2,4,1,45.14,Other,Weller,Other
 2022-12-12,Weller,2022,12,12,0,1,1,3,5,0,41.36,Other,Blantons,Other
 2022-12-12,Weller,2022,12,12,0,1,1,3,5,0,41.36,Taylor,Blantons,Other
 2022-12-13,Taylor,2022,12,13,1,1,2,4,0,1,40.28,Weller,Weller,Other
@@ -1135,7 +1135,7 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-12-06,Weller,2023,12,6,2,0,2,3,1,0,38.12,Blantons,Taylor,No Extra
 2023-12-07,Blantons,2023,12,7,3,0,0,4,2,1,43.7,Taylor,Weller,No Extra
 2023-12-08,Taylor,2023,12,8,4,0,1,5,0,2,54.14,Blantons,Blantons,No Extra
-2023-12-09,Blantons,2023,12,9,5,0,0,6,1,3,56.48,Weller,Taylor,No Extra
+2023-12-09,Blantons,2023,12,9,5,0,0,6,1,3,56.3,Weller,Taylor,No Extra
 2023-12-10,Weller,2023,12,10,6,0,1,7,2,0,39.56,Eagle Rare,Blantons,No Extra
 2023-12-11,Eagle Rare,2023,12,11,0,0,2,0,3,1,33.26,Taylor,Weller,No Extra
 2023-12-12,Taylor,2023,12,12,1,0,3,1,0,2,37.4,Blantons,Eagle Rare,No Extra
@@ -1183,5 +1183,6 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2024-01-24,Blantons,2024,1,24,2,0,0,1,3,2,53.42,Weller,Eagle Rare,No Extra
 2024-01-25,Weller,2024,1,25,3,0,1,2,4,0,59.18,Taylor,Blantons,No Extra
 2024-01-26,Taylor,2024,1,26,4,0,2,3,0,1,51.8,Blantons,Weller,No Extra
-2024-01-27,Blantons,2024,1,27,5,0,0,4,1,2,44.42,Weller,Taylor,No Extra
-2024-01-28,Weller,2024,1,28,6,0,1,5,2,0,40.1,,Blantons,No Extra
+2024-01-27,Blantons,2024,1,27,5,0,0,4,1,2,45.68,Weller,Taylor,No Extra
+2024-01-28,Weller,2024,1,28,6,0,1,5,2,0,39.92,Taylor,Blantons,No Extra
+2024-01-29,Taylor,2024,1,29,0,0,2,6,0,1,36.86,,Weller,No Extra
