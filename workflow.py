@@ -12,3 +12,6 @@ with open('compare.py') as f:
 with open('prediction.py') as f:
     exec(f.read())
 
+# Step 4: Accuracy plot #
+with open('acc_plot.py') as f:
+    exec(f.read())

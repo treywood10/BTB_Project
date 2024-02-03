@@ -6,8 +6,6 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import re
 
-# Import dataset #
-
 # Import bourbon csv #
 bourbon = pd.read_csv('bourbon_data.csv')
 bourbon = bourbon.sort_values('Date', ascending = False)
