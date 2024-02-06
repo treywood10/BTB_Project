@@ -93,7 +93,7 @@ bourbon['Date'] = pd.to_datetime(bourbon['Date'])
 #### Get Up to Date ####
 #
 
-def get_update(x, access_limit = 20, sleep_duration = 5):
+def get_update(x, access_limit = 20, sleep_duration = 2):
     """
     Update bourbon data if historical data is not current.
 
@@ -118,7 +118,7 @@ def get_update(x, access_limit = 20, sleep_duration = 5):
                             'B2': ' '}, index = [0])
         x = pd.concat([x, missing])
 
-    while x['Date'].max() < (datetime.now() - timedelta(days =1)):
+    while x['Date'].max() < datetime.now():
 
         access_count += 1
 
