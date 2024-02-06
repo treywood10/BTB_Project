@@ -6,6 +6,7 @@ import seaborn as sns
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import re
+import requests
 
 # Import dataset #
 

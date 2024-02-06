@@ -1191,4 +1191,5 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2024-02-01,Taylor,2024,2,1,3,0,2,9,0,1,43.16,Blantons,Weller,No Extra
 2024-02-02,Blantons,2024,2,2,4,0,0,10,1,2,43.879999999999995,Eagle Rare,Taylor,No Extra
 2024-02-03,Eagle Rare,2024,2,3,5,0,1,0,2,3,38.839999999999996,Weller,Blantons,No Extra
-2024-02-04,Weller,2024,2,4,6,0,2,1,3,0,40.64,,Eagle Rare,No Extra
+2024-02-04,Weller,2024,2,4,6,0,2,1,3,0,40.64,Blantons,Eagle Rare,No Extra
+2024-02-05,Blantons,2024,2,5,1,0,0,2,4,1,45.02,,Weller,No Extra

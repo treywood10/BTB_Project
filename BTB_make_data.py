@@ -11,6 +11,7 @@ import numpy as np
 import re
 from datetime import datetime, timedelta
 from meteostat import Point, Daily
+import time
 
 
 #
@@ -92,7 +93,7 @@ bourbon['Date'] = pd.to_datetime(bourbon['Date'])
 #### Get Up to Date ####
 #
 
-def get_update(x):
+def get_update(x, access_limit = 20, sleep_duration = 5):
     """
     Update bourbon data if historical data is not current.
 
@@ -107,14 +108,23 @@ def get_update(x):
         Updated bourbon dataframe.
 
     """
+
+    access_count = 0
+
     if x['Date'].max() < pd.to_datetime('2024-01-01 00:00:00'):
         missing = pd.DataFrame({'Date': pd.to_datetime('2024-01-01 00:00'),
                             'DOW': 'MON',
                             'B1': 'Closed',
                             'B2': ' '}, index = [0])
         x = pd.concat([x, missing])
-    # while x['Date'].max() < datetime.now():
-    while x['Date'].max() < datetime.now():
+
+    while x['Date'].max() < (datetime.now() - timedelta(days =1)):
+
+        access_count += 1
+
+        if access_count % access_limit == 0:
+            print(f"Sleeping for {sleep_duration} seconds after {access_count} accesses.")
+            time.sleep(sleep_duration)
 
         if x['Date'].max().date() < datetime(2023, 10, 15).date():
 
