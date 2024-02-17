@@ -1083,8 +1083,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-10-20,Blantons,2023,10,20,4,0,0,8,1,1,55.58,Eagle Rare,Taylor,Weller
 2023-10-21,Eagle Rare,2023,10,21,5,0,1,0,2,2,56.48,Taylor,Blantons,No Extra
 2023-10-22,Taylor,2023,10,22,6,0,2,1,0,3,53.6,Blantons,Eagle Rare,No Extra
-2023-10-23,Blantons,2023,10,23,0,0,0,2,1,4,50.54,Eagle Rare,Taylor,No Extra
 2023-10-23,Blantons,2023,10,23,0,0,0,2,1,4,50.54,Weller,Taylor,No Extra
+2023-10-23,Blantons,2023,10,23,0,0,0,2,1,4,50.54,Eagle Rare,Taylor,No Extra
 2023-10-24,Eagle Rare,2023,10,24,1,1,1,0,2,0,61.7,Taylor,Blantons,No Extra
 2023-10-24,Weller,2023,10,24,1,1,1,0,2,0,61.7,Taylor,Blantons,No Extra
 2023-10-25,Taylor,2023,10,25,2,0,2,1,0,1,65.48,Weller,Eagle Rare,Weller
@@ -1107,8 +1107,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-11-11,Weller,2023,11,11,5,0,1,10,2,0,45.68,Eagle Rare,Blantons,No Extra
 2023-11-12,Eagle Rare,2023,11,12,6,0,2,0,3,1,45.14,Blantons,Weller,No Extra
 2023-11-13,Blantons,2023,11,13,0,0,0,1,4,2,45.68,Taylor,Eagle Rare,No Extra
-2023-11-14,Taylor,2023,11,14,1,0,1,2,0,3,43.519999999999996,Eagle Rare,Blantons,No Extra
 2023-11-14,Taylor,2023,11,14,1,0,1,2,0,3,43.519999999999996,Weller,Blantons,No Extra
+2023-11-14,Taylor,2023,11,14,1,0,1,2,0,3,43.519999999999996,Eagle Rare,Blantons,No Extra
 2023-11-15,Eagle Rare,2023,11,15,2,1,2,0,1,0,50.36,Weller,Taylor,No Extra
 2023-11-15,Weller,2023,11,15,2,1,2,0,1,0,50.36,Weller,Taylor,No Extra
 2023-11-16,Weller,2023,11,16,3,0,3,1,2,0,51.620000000000005,Taylor,Eagle Rare,Weller
@@ -1202,5 +1202,6 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2024-02-12,Eagle Rare,2024,2,12,0,0,2,0,3,1,44.06,Blantons,Weller,No Extra
 2024-02-13,Blantons,2024,2,13,1,0,0,1,4,2,42.8,Taylor,Eagle Rare,No Extra
 2024-02-14,Taylor,2024,2,14,2,0,1,2,0,3,42.8,Weller,Blantons,No Extra
-2024-02-15,Weller,2024,2,15,3,0,2,3,1,0,46.58,Blantons,Taylor,No Extra
-2024-02-16,Blantons,2024,2,16,4,0,0,4,2,1,35.78,,Weller,No Extra
+2024-02-15,Weller,2024,2,15,3,0,2,3,1,0,47.3,Blantons,Taylor,No Extra
+2024-02-16,Blantons,2024,2,16,4,0,0,4,2,1,35.78,Taylor,Weller,No Extra
+2024-02-17,Taylor,2024,2,17,5,0,1,5,0,2,27.14,,Blantons,No Extra
