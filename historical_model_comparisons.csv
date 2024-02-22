@@ -38,3 +38,4 @@ Date,My_Prediction,Their_Prediction,Bourbon_today,My_Correct,They_Correct
 2024-02-19 17:04:05.053762,Blantons,Weller,Weller,0.0,1.0
 2024-02-20 17:04:55.362932,Blantons,Blantons,Taylor,0.0,0.0
 2024-02-21 17:05:08.695657,Blantons,Blantons,Weller,0.0,0.0
+2024-02-22 17:04:08.239716,Blantons,Blantons,Blantons,1.0,1.0
