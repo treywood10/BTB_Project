@@ -52,3 +52,4 @@ Date,My_Prediction,Their_Prediction,Bourbon_today,My_Correct,They_Correct
 2024-03-04 17:04:09.944989,Blantons,Weller,Weller,0.0,1.0
 2024-03-05 17:05:17.529922,Blantons,Blantons,Blantons,1.0,1.0
 2024-03-06 17:04:34.023092,Taylor,Eagle Rare,Weller,0.0,0.0
+2024-03-07 17:05:04.104477,Taylor,Eagle Rare,Eagle Rare,0.0,1.0
