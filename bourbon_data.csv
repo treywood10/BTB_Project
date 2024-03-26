@@ -1078,13 +1078,13 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-10-17,Blantons,2023,10,17,1,0,0,5,1,2,52.16,Weller,Taylor,No Extra
 2023-10-18,Weller,2023,10,18,2,0,1,6,2,0,52.52,Taylor,Blantons,No Extra
 2023-10-18,Weller,2023,10,18,2,0,1,6,2,0,52.52,Weller,Blantons,No Extra
-2023-10-19,Taylor,2023,10,19,3,1,2,7,0,0,58.28,Blantons,Weller,No Extra
 2023-10-19,Weller,2023,10,19,3,1,2,7,0,0,58.28,Blantons,Weller,No Extra
+2023-10-19,Taylor,2023,10,19,3,1,2,7,0,0,58.28,Blantons,Weller,No Extra
 2023-10-20,Blantons,2023,10,20,4,0,0,8,1,1,55.58,Eagle Rare,Taylor,Weller
 2023-10-21,Eagle Rare,2023,10,21,5,0,1,0,2,2,56.48,Taylor,Blantons,No Extra
 2023-10-22,Taylor,2023,10,22,6,0,2,1,0,3,53.6,Blantons,Eagle Rare,No Extra
-2023-10-23,Blantons,2023,10,23,0,0,0,2,1,4,50.54,Weller,Taylor,No Extra
 2023-10-23,Blantons,2023,10,23,0,0,0,2,1,4,50.54,Eagle Rare,Taylor,No Extra
+2023-10-23,Blantons,2023,10,23,0,0,0,2,1,4,50.54,Weller,Taylor,No Extra
 2023-10-24,Weller,2023,10,24,1,1,1,0,2,0,61.7,Taylor,Blantons,No Extra
 2023-10-24,Eagle Rare,2023,10,24,1,1,1,0,2,0,61.7,Taylor,Blantons,No Extra
 2023-10-25,Taylor,2023,10,25,2,0,2,1,0,1,65.48,Weller,Eagle Rare,Weller
@@ -1107,8 +1107,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-11-11,Weller,2023,11,11,5,0,1,10,2,0,45.68,Eagle Rare,Blantons,No Extra
 2023-11-12,Eagle Rare,2023,11,12,6,0,2,0,3,1,45.14,Blantons,Weller,No Extra
 2023-11-13,Blantons,2023,11,13,0,0,0,1,4,2,45.68,Taylor,Eagle Rare,No Extra
-2023-11-14,Taylor,2023,11,14,1,0,1,2,0,3,43.519999999999996,Eagle Rare,Blantons,No Extra
 2023-11-14,Taylor,2023,11,14,1,0,1,2,0,3,43.519999999999996,Weller,Blantons,No Extra
+2023-11-14,Taylor,2023,11,14,1,0,1,2,0,3,43.519999999999996,Eagle Rare,Blantons,No Extra
 2023-11-15,Eagle Rare,2023,11,15,2,1,2,0,1,0,50.36,Weller,Taylor,No Extra
 2023-11-15,Weller,2023,11,15,2,1,2,0,1,0,50.36,Weller,Taylor,No Extra
 2023-11-16,Weller,2023,11,16,3,0,3,1,2,0,51.620000000000005,Taylor,Eagle Rare,Weller
@@ -1116,8 +1116,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-11-18,Blantons,2023,11,18,5,0,0,3,1,2,44.96,Weller,Taylor,No Extra
 2023-11-19,Weller,2023,11,19,6,0,1,4,2,0,41.18,Eagle Rare,Blantons,No Extra
 2023-11-19,Weller,2023,11,19,6,0,1,4,2,0,41.18,Weller,Blantons,No Extra
-2023-11-20,Weller,2023,11,20,0,1,2,0,3,0,47.3,Taylor,Weller,No Extra
 2023-11-20,Eagle Rare,2023,11,20,0,1,2,0,3,0,47.3,Taylor,Weller,No Extra
+2023-11-20,Weller,2023,11,20,0,1,2,0,3,0,47.3,Taylor,Weller,No Extra
 2023-11-21,Taylor,2023,11,21,1,0,3,1,0,1,49.82,Weller,Eagle Rare,Weller
 2023-11-22,Weller,2023,11,22,2,0,4,2,1,0,42.260000000000005,Closed,Taylor,No Extra
 2023-11-24,Blantons,2023,11,24,4,0,0,4,3,2,38.3,Taylor,Closed,No Extra
@@ -1144,8 +1144,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-12-15,Blantons,2023,12,15,4,0,0,4,3,1,38.3,Taylor,Weller,No Extra
 2023-12-16,Taylor,2023,12,16,5,0,1,5,0,2,46.22,Weller,Blantons,No Extra
 2023-12-17,Weller,2023,12,17,6,0,2,6,1,0,49.28,Blantons,Taylor,No Extra
-2023-12-18,Blantons,2023,12,18,0,0,0,7,2,1,35.42,Eagle Rare,Weller,No Extra
 2023-12-18,Blantons,2023,12,18,0,0,0,7,2,1,35.42,Weller,Weller,No Extra
+2023-12-18,Blantons,2023,12,18,0,0,0,7,2,1,35.42,Eagle Rare,Weller,No Extra
 2023-12-19,Eagle Rare,2023,12,19,1,1,1,0,3,0,27.68,Taylor,Blantons,No Extra
 2023-12-19,Weller,2023,12,19,1,1,1,0,3,0,27.68,Taylor,Blantons,No Extra
 2023-12-20,Taylor,2023,12,20,2,0,2,1,0,1,32.9,Blantons,Eagle Rare,Weller
@@ -1241,4 +1241,5 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2024-03-22,Weller,2024,3,22,4,0,1,4,2,0,45.32,Blantons,Blantons,No Extra
 2024-03-23,Blantons,2024,3,23,5,0,0,5,3,1,42.980000000000004,Eagle Rare,Weller,No Extra
 2024-03-24,Eagle Rare,2024,3,24,6,0,1,0,4,2,41.9,Taylor,Blantons,No Extra
-2024-03-25,Taylor,2024,3,25,0,0,2,1,0,3,53.24,,Eagle Rare,No Extra
+2024-03-25,Taylor,2024,3,25,0,0,2,1,0,3,53.24,Blantons,Eagle Rare,No Extra
+2024-03-26,Blantons,2024,3,26,1,0,0,2,1,4,55.94,,Taylor,No Extra
