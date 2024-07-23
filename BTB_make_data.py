@@ -22,23 +22,23 @@ import time
 def scrape_bourbon_data(urls):
     def get_bourbon_data(url):
         """
-        Function to pull bourbon gift shop data. 
+        Function to pull bourbon gift shop data.
 
         Parameters
         ----------
         urls : string
-            List of URLs to scrape. 
-            
+            List of URLs to scrape.
+
         url : string
             URL for the website.
 
         Returns
         -------
-        x : Dataframe 
+        x : Dataframe
             Dataframe of info from HTML table.
-        
-        df : Dataframe 
-            Dataframe of all info from HTML tables. 
+
+        df : Dataframe
+            Dataframe of all info from HTML tables.
 
         """
 
@@ -67,7 +67,7 @@ def scrape_bourbon_data(urls):
     for url in urls:
         df = pd.concat([df, get_bourbon_data(url)], ignore_index=True)
 
-    # Provide columns labels 
+    # Provide columns labels
     df.columns = ['Date', 'DOW', 'B1', 'B2']
 
     # Return final dataframe #
@@ -76,13 +76,14 @@ def scrape_bourbon_data(urls):
 
 # URL of the pages to scrape
 urls = [
+    "https://buffalotracedaily.com/2024-gift-shop-releases/",
     "https://buffalotracedaily.com/2023-gift-shop-releases/",
     "https://buffalotracedaily.com/2022-gift-shop-releases/",
     "https://buffalotracedaily.com/2021-gift-shop-releases/",
     "https://buffalotracedaily.com/2020-gift-shop-releases/"
 ]
 
-# Call the function to get bourbon data 
+# Call the function to get bourbon data
 bourbon = scrape_bourbon_data(urls)
 del urls
 
@@ -116,6 +117,20 @@ def get_update(x, access_limit = 20, sleep_duration = 2):
                             'DOW': 'MON',
                             'B1': 'Closed',
                             'B2': ' '}, index = [0])
+        x = pd.concat([x, missing])
+
+    if x['Date'].max() < pd.to_datetime('2024-07-03 00:00:00'):
+        missing = pd.DataFrame({'Date': pd.to_datetime('2024-07-03 00:00:00'),
+                                'DOW': 'WED',
+                                'B1': 'Taylor',
+                                'B2': ' '}, index = [0])
+        x = pd.concat([x, missing])
+
+    if x['Date'].max() < pd.to_datetime('2024-07-04 00:00:00'):
+        missing = pd.DataFrame({'Date': pd.to_datetime('2024-07-04 00:00:00'),
+                                'DOW': 'THU',
+                                'B1': 'Closed',
+                                'B2': ' '}, index = [0])
         x = pd.concat([x, missing])
 
     while x['Date'].max() < datetime.now():
@@ -207,7 +222,7 @@ bourbon = get_update(bourbon)
 
 #
 #### Prepare Dataframe ####
-# 
+#
 
 
 # Pull year, month, day, and DOW #
@@ -256,7 +271,7 @@ def rename_categories(x):
     return x
 
 
-# Rename categories # 
+# Rename categories #
 bourbon['B1'] = rename_categories(bourbon['B1'])
 bourbon['B2'] = rename_categories(bourbon['B2'])
 bourbon['B3'] = rename_categories(bourbon['B3'])
