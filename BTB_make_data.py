@@ -12,6 +12,8 @@ import re
 from datetime import datetime, timedelta
 from meteostat import Point, Daily
 import time
+import holidays
+from dateutil import easter
 
 
 #
@@ -19,58 +21,45 @@ import time
 #
 
 # Create function for data scraping #
-def scrape_bourbon_data(urls):
-    def get_bourbon_data(url):
-        """
-        Function to pull bourbon gift shop data.
+def scrape_historical_bourbon_data(urls):
+    """
+    Function to pull bourbon gift shop data from a list of URLs.
 
-        Parameters
-        ----------
-        urls : string
-            List of URLs to scrape.
+    Parameters
+    ----------
+    urls : list of strings
+        List of URLs to scrape.
 
-        url : string
-            URL for the website.
+    Returns
+    -------
+    df : DataFrame
+        DataFrame containing combined info from HTML tables across all URLs.
+    """
+    # Make an empty dataframe to concatenate results
+    df = pd.DataFrame()
 
-        Returns
-        -------
-        x : Dataframe
-            Dataframe of info from HTML table.
-
-        df : Dataframe
-            Dataframe of all info from HTML tables.
-
-        """
-
-        # Get the HTML table with desired info #
+    # Loop through list of URLs
+    for url in urls:
+        # Get the HTML table with desired info
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
         table = soup.find('table')
 
-        # Empty list to fill with info #
+        # Empty list to fill with info
         rows = []
         for tr in table.find_all('tr'):
             row_data = [td.get_text(strip=True) for td in tr.find_all('td')]
             if row_data:
                 rows.append(row_data)
 
-        # Make empty list into a dataframe #
+        # Convert list to a DataFrame and concatenate with the main DataFrame
         x = pd.DataFrame(rows)
+        df = pd.concat([df, x], ignore_index=True)
 
-        # Return dataframe #
-        return x
-
-    # Make empty dataframe to concatenate #
-    df = pd.DataFrame()
-
-    # Loop through list of urls #
-    for url in urls:
-        df = pd.concat([df, get_bourbon_data(url)], ignore_index=True)
-
-    # Provide columns labels
+    # Provide column labels
     df.columns = ['Date', 'DOW', 'B1', 'B2']
 
-    # Return final dataframe #
+    # Return final DataFrame
     return df
 
 
@@ -84,145 +73,115 @@ urls = [
 ]
 
 # Call the function to get bourbon data
-bourbon = scrape_bourbon_data(urls)
+bourbon = scrape_historical_bourbon_data(urls)
 del urls
 
 # Set datatime #
 bourbon['Date'] = pd.to_datetime(bourbon['Date'])
 
 #
-#### Get Up to Date ####
+#### Update Historical Data ####
 #
 
-def get_update(x, access_limit = 20, sleep_duration = 2):
-    """
-    Update bourbon data if historical data is not current.
+def update_historical_bourbon_data(df):
 
-    Parameters
-    ----------
-    x : Dataframe
-        Dataframe to be checked and added to in function.
+    # Get BT holiday dates
+    us_holidays = holidays.US(years=df['Date'].dt.year.max())
+    us_holidays[easter.easter(df['Date'].dt.year.max())] = 'Easter Sunday'
+    us_holidays[pd.Timestamp(f'{df["Date"].dt.year.max()}-12-24')] = 'Christmas Eve'
+    holidays_df = pd.DataFrame(list(us_holidays.items()), columns=['Date', 'Holiday']).sort_values(by='Date')
+    holidays_df = holidays_df[holidays_df['Holiday'].isin(['New Year\'s Day', 'Easter Sunday', 'Independence Day',
+                                                           'Thanksgiving', 'Christmas Eve', 'Christmas Day'])]
 
-    Returns
-    -------
-    x : Dataframe
-        Updated bourbon dataframe.
+    # Ensure 'Date' column is in datetime format
+    holidays_df['Date'] = pd.to_datetime(holidays_df['Date'])
 
-    """
+    while df['Date'].max() < datetime.now():
 
-    access_count = 0
+        # Holiday Check
+        max_date = df['Date'].max().date()  # Convert max date to datetime.date for comparison
+        holiday_dates = holidays_df['Date'].dt.date  # Convert holidays_df['Date'] to datetime.date
 
-    if x['Date'].max() < pd.to_datetime('2024-01-01 00:00:00'):
-        missing = pd.DataFrame({'Date': pd.to_datetime('2024-01-01 00:00'),
-                            'DOW': 'MON',
-                            'B1': 'Closed',
-                            'B2': ' '}, index = [0])
-        x = pd.concat([x, missing])
+        print(max_date)
 
-    if x['Date'].max() < pd.to_datetime('2024-07-03 00:00:00'):
-        missing = pd.DataFrame({'Date': pd.to_datetime('2024-07-03 00:00:00'),
-                                'DOW': 'WED',
-                                'B1': 'Taylor',
-                                'B2': ' '}, index = [0])
-        x = pd.concat([x, missing])
+        if max_date in holiday_dates.values:  # Use 'in' with converted date values
 
-    if x['Date'].max() < pd.to_datetime('2024-07-04 00:00:00'):
-        missing = pd.DataFrame({'Date': pd.to_datetime('2024-07-04 00:00:00'),
-                                'DOW': 'THU',
-                                'B1': 'Closed',
-                                'B2': ' '}, index = [0])
-        x = pd.concat([x, missing])
+            # Holiday fill row
+            holiday = pd.DataFrame({'Date': df['Date'].max() + timedelta(days=1),
+                                    'DOW': (df['Date'].max() + timedelta(days=1)).strftime('%a'),
+                                    'B1': 'Closed',
+                                    'B2': ' '}, index=[0])
 
-    while x['Date'].max() < datetime.now():
-
-        access_count += 1
-
-        if access_count % access_limit == 0:
-            print(f"Sleeping for {sleep_duration} seconds after {access_count} accesses.")
-            time.sleep(sleep_duration)
-
-        if x['Date'].max().date() < datetime(2023, 10, 15).date():
-
-            # Create a DataFrame with a single row
-            weird_date_df = pd.DataFrame({'Date': [datetime(2023, 10, 15)],
-                                          'DOW': ['Sun'],
-                                          'B1': ['Weller'],
-                                          'Medal': [np.nan]})
-
-            # Drop the 'Medal' column #
-            weird_date_df = weird_date_df.drop('Medal', axis=1)
-
-            # Make 'Date' into datetime
-            weird_date_df['Date'] = pd.to_datetime(weird_date_df['Date'])
-
-            # Concatenate the new DataFrame to the original DataFrame
-            x = pd.concat([x, weird_date_df], ignore_index=True)
+            # Combine with dataframe
+            df = pd.concat([df, holiday], ignore_index=True)
 
         else:
+            found_data = False  # Flag to track if valid data was found
 
-            # Get max date plus 1 day of dataframe and match ULR #
-            day_1 = x['Date'].max() + timedelta(days=1)
-            day_1_form = day_1.strftime('%Y/%m/%d')
+            # Loop to check up to 3 days in the future
+            for day_offset in range(3):
+                day_1 = df['Date'].max() + timedelta(days=day_offset + 1)
+                day_1_form = day_1.strftime('%Y/%m/%d')
 
-            # Get next day's date and match URL #
-            day_2 = day_1 + timedelta(days=1)
-            day_2 = day_2.strftime('%B-%d-%Y').lower()
-            day_2 = day_2.replace('-0', '-')
+                # Get next day's date and match URL
+                day_2 = day_1 + timedelta(days=1)
+                day_2_form = day_2.strftime('%B-%d-%Y').lower().replace('-0', '-')
 
-            # URL skeleton #
-            # Get url for days #
-            url = f'https://buffalotracedaily.com/{day_1_form}/what-buffalo-trace-is-selling-today-and-predictions-for-tomorrow-{day_2}/'
+                # URL skeleton
+                url = f'https://buffalotracedaily.com/{day_1_form}/what-buffalo-trace-is-selling-today-and-predictions-for-tomorrow-{day_2_form}/'
 
-            # Get HTML table #
-            response = requests.get(url)
+                # Get HTML table
+                response = requests.get(url)
 
-            # Break if URL does not exhist. Likely not updated today #
-            if response.status_code != 200:
-                print(f"URL does not exist or there was an issue for {day_1_form}.")
+                if response.status_code == 200:
+                    # Parse the HTML
+                    soup = BeautifulSoup(response.content, 'html.parser')
+
+                    # Find all tables on the page
+                    tables = soup.find_all('table')
+
+                    # Find the correct table
+                    table = tables[2]
+
+                    # Make a dataframe to fill
+                    rows = []
+
+                    # Pull info #
+                    for tr in table.find_all('tr'):
+                        row_data = [td.get_text(strip=True) for td in tr.find_all('td')]
+                        if row_data:
+                            rows.append(row_data)
+
+                    # Make dataframe #
+                    soup_df = pd.DataFrame(rows, columns=['Date', 'DOW', 'B1', 'Medal'])
+
+                    # Drop the 'Medal' column #
+                    soup_df = soup_df.drop('Medal', axis=1)
+
+                    # Make 'Date' into datetime
+                    soup_df['Date'] = pd.to_datetime(soup_df['Date'])
+
+                    # Filter to keep rows in soup_df with dates not already in df
+                    soup_df = soup_df[~soup_df['Date'].isin(df['Date'])]
+
+                    # Append to the original df #
+                    df = pd.concat([soup_df, df], ignore_index=True)
+                    df = df.sort_values(by=['Date'])
+
+                    found_data = True  # Set flag to True if data was found
+                    break  # Exit the loop if data is found
+                else:
+                    print(f"URL does not exist or there was an issue for {day_1_form}.")
+
+            # Break the outer loop if no data was found after checking 3 days
+            if not found_data:
+                print("No valid data found for up to 3 days in the future. Exiting loop.")
                 break
 
-            # Parse the HTML #
-            soup = BeautifulSoup(response.content, 'html.parser')
-
-            # Find all tables on the page #
-            tables = soup.find_all('table')
-
-            # Find the correct table #
-            table = tables[2]
-
-            # Make a dataframe to fill #
-            rows = []
-
-            # Pull info #
-            for tr in table.find_all('tr'):
-                row_data = [td.get_text(strip=True) for td in tr.find_all('td')]
-                if row_data:
-                    rows.append(row_data)
-
-            # Make dataframe #
-            df = pd.DataFrame(rows, columns=['Date', 'DOW', 'B1', 'Medal'])
-
-            # Drop the 'Medal' column #
-            df = df.drop('Medal', axis=1)
-
-            # Make 'Date' into datetime
-            df['Date'] = pd.to_datetime(df['Date'])
-
-            # Keep rows equal to date #
-            df = df[df['Date'] == day_1_form]
-
-            # Append to the original df #
-            x = pd.concat([x, df], ignore_index=True)
-
-    return x
+    return df
 
 
-# Call the function to update the 'bourbon' dataframe until today's date
-bourbon = get_update(bourbon)
-
-#
-#### Prepare Dataframe ####
-#
+bourbon = update_historical_bourbon_data(bourbon)
 
 
 # Pull year, month, day, and DOW #
@@ -454,3 +413,4 @@ bourbon = bourbon.sort_values('Date')
 
 # Write dataset to CSV #
 bourbon.to_csv('bourbon_data.csv', index=False)
+
