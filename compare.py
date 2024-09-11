@@ -1,10 +1,4 @@
 import pandas as pd
-import pickle
-import matplotlib.pyplot as plt
-import seaborn as sns
-from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
-import re
 
 # Import bourbon csv #
 bourbon = pd.read_csv('bourbon_data.csv')
