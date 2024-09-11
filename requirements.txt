@@ -11,3 +11,4 @@ scikit-learn~=1.2.2
 xgboost~=1.7.5
 scikeras~=0.11.0
 keras~=2.11.0
+holidays~=0.55

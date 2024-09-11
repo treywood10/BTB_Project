@@ -11,7 +11,6 @@ import numpy as np
 import re
 from datetime import datetime, timedelta
 from meteostat import Point, Daily
-import time
 import holidays
 from dateutil import easter
 
