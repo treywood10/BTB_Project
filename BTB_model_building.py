@@ -16,8 +16,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder
 from sklearn.metrics import f1_score, make_scorer
-
-from keras.utils import np_utils
 import tensorflow as tf
 
 # Import model tuning functions
@@ -41,8 +39,8 @@ del f
 seed = 90
 
 # Set  searches #
-n_init = 50
-n_iter = 150
+n_init = 10
+n_iter = 10
 
 # Import csv #
 bourbon = pd.read_csv('bourbon_data.csv')
@@ -423,8 +421,8 @@ plt.show()
 #
 
 # Fix target values for XGBoost #
-y_train_dums = np_utils.to_categorical(y_train_encode)
-y_test_dums = np_utils.to_categorical(y_test_encode)
+y_train_dums = pd.get_dummies(y_train_encode).values
+y_test_dums = pd.get_dummies(y_test_encode).values
 
 # Set the random seed for TensorFlow #
 tf.random.set_seed(seed)

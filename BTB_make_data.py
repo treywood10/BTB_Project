@@ -115,7 +115,7 @@ def update_historical_bourbon_data(df):
             df = pd.concat([df, holiday], ignore_index=True)
 
         else:
-            found_data = False  # Flag to track if valid data was found
+            found_data = False
 
             # Loop to check up to 3 days in the future
             for day_offset in range(3):
@@ -158,7 +158,7 @@ def update_historical_bourbon_data(df):
                     soup_df = soup_df.drop('Medal', axis=1)
 
                     # Make 'Date' into datetime
-                    soup_df['Date'] = pd.to_datetime(soup_df['Date'])
+                    soup_df['Date'] = pd.to_datetime(soup_df['Date'], format='%m/%d/%y')
 
                     # Filter to keep rows in soup_df with dates not already in df
                     soup_df = soup_df[~soup_df['Date'].isin(df['Date'])]
@@ -167,8 +167,8 @@ def update_historical_bourbon_data(df):
                     df = pd.concat([soup_df, df], ignore_index=True)
                     df = df.sort_values(by=['Date'])
 
-                    found_data = True  # Set flag to True if data was found
-                    break  # Exit the loop if data is found
+                    found_data = True
+                    break
                 else:
                     print(f"URL does not exist or there was an issue for {day_1_form}.")
 
@@ -181,7 +181,6 @@ def update_historical_bourbon_data(df):
 
 
 bourbon = update_historical_bourbon_data(bourbon)
-
 
 # Pull year, month, day, and DOW #
 bourbon['Year'] = bourbon['Date'].dt.year
@@ -202,29 +201,24 @@ def has_alphanum(s):
 
 
 # Apply the function to replace values with NaN if no alphanumeric characters are present
-bourbon[['B2', 'B3']] = bourbon[['B2', 'B3']]. \
-    applymap(lambda x: np.nan if pd.isna(x) or not has_alphanum(x) else x)
-
+bourbon[['B2', 'B3']] = bourbon[['B2', 'B3']].apply(
+    lambda col: col.map(lambda x: np.nan if pd.isna(x) or not has_alphanum(x) else x))
 
 # Make function to limit category values and aggregate #
 def rename_categories(x):
-    # Lower case values
+    """Lowercase and replace category names based on regex patterns."""
+    # Lowercase values
     x = x.str.lower()
 
-    # Replace values based on conditions
-    def replace_value(value, pattern, replacement):
-        if pd.notna(value) and re.match(pattern, value):
-            return replacement
-        return value
-
-    x = x.apply(lambda value: replace_value(value, r'.*blanton.*', 'Blantons'))
-    x = x.apply(lambda value: replace_value(value, r'.*close.*', 'Closed'))
-    x = x.apply(lambda value: replace_value(value, r'.*weller.*', 'Weller'))
-    x = x.apply(lambda value: replace_value(value, r'.*eagle.*', 'Eagle Rare'))
-    x = x.apply(lambda value: replace_value(value, r'.*sazerac.*', 'Other'))
-    x = x.apply(lambda value: replace_value(value, r'.*taylor.*', 'Taylor'))
-    x = x.apply(lambda value: replace_value(value, r'.*oak.*', 'Other'))
-    x = x.apply(lambda value: replace_value(value, r'.*none.*', 'Closed'))
+    # Apply replacements directly
+    x = x.apply(lambda value: 'Blantons' if pd.notna(value) and re.match(r'.*blanton.*', value) else value)
+    x = x.apply(lambda value: 'Closed' if pd.notna(value) and re.match(r'.*close.*', value) else value)
+    x = x.apply(lambda value: 'Weller' if pd.notna(value) and re.match(r'.*weller.*', value) else value)
+    x = x.apply(lambda value: 'Eagle Rare' if pd.notna(value) and re.match(r'.*eagle.*', value) else value)
+    x = x.apply(lambda value: 'Other' if pd.notna(value) and re.match(r'.*sazerac.*', value) else value)
+    x = x.apply(lambda value: 'Taylor' if pd.notna(value) and re.match(r'.*taylor.*', value) else value)
+    x = x.apply(lambda value: 'Other' if pd.notna(value) and re.match(r'.*oak.*', value) else value)
+    x = x.apply(lambda value: 'Closed' if pd.notna(value) and re.match(r'.*none.*', value) else value)
 
     return x
 
@@ -243,7 +237,7 @@ unique_categories_b1 = bourbon['B1'].dropna().unique()
 unique_categories_b2 = bourbon['B2'].dropna().unique()
 unique_categories_b3 = bourbon['B3'].dropna().unique()
 
-# Combine unqiue categories #
+# Combine unique categories #
 unique_categories = np.union1d(np.union1d(unique_categories_b1, unique_categories_b2), unique_categories_b3)
 
 # One-hot encode B1, B2, and B3 columns separately
@@ -302,10 +296,6 @@ for category in unique_categories:
     # Add the time values as a new column in the DataFrame
     bourbon[column_name] = time_values
 del category, column_name, columns_with_category, index, row, t, time_since_last_occurrence, time_values, unique_categories
-
-# Drop B variables #
-# bourbon = bourbon.drop(['B1', 'B2', 'B3'], axis = 1)
-
 
 #
 #### Add Local Weather ####
@@ -394,9 +384,6 @@ bourbon['Bourbon_2_lag'] = bourbon['Bourbon_2_lag'].replace(0, 'No Extra')
 # Drop Bourbon binary #
 bourbon = bourbon.drop(['Blantons', 'Closed', 'Eagle Rare', 'Other', 'Taylor', 'Weller'], axis=1)
 
-# Drop row if nan. Temp updates later in the day #
-# bourbon = bourbon.dropna()
-
 
 #
 #### Save Data
@@ -412,4 +399,3 @@ bourbon = bourbon.sort_values('Date')
 
 # Write dataset to CSV #
 bourbon.to_csv('bourbon_data.csv', index=False)
-
