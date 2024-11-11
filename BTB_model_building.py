@@ -17,6 +17,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder
 from sklearn.metrics import f1_score, make_scorer
 import tensorflow as tf
+from keras.utils import to_categorical
+
 
 # Import model tuning functions
 from models.logistic_train import log_tuning
@@ -39,8 +41,8 @@ del f
 seed = 90
 
 # Set  searches #
-n_init = 10
-n_iter = 10
+n_init = 50
+n_iter = 100
 
 # Import csv #
 bourbon = pd.read_csv('bourbon_data.csv')
@@ -421,27 +423,27 @@ plt.show()
 #
 
 # Fix target values for XGBoost #
-y_train_dums = pd.get_dummies(y_train_encode).values
-y_test_dums = pd.get_dummies(y_test_encode).values
+y_train_dums = to_categorical(y_train_encode)
+y_test_dums = to_categorical(y_test_encode)
 
 # Set the random seed for TensorFlow #
 tf.random.set_seed(seed)
 
 # Define the search space #
 pbounds = {
-    'batch_size': (100, 800),
-    'epochs': (20, 80),
+    'batch_size': (32, 96),
+    'epochs': (20, 40),
     'optimizer': (0, 1),
-    'rate': (0.001, 0.9),
+    'rate': (0.1, 0.5),
     'activation': (0, 1),
-    'learning_rate': (0.0001, 0.3),
-    'num_hidden_layers': (1, 200),
-    'num_nodes': (1, 100),
+    'learning_rate': (0.0001, 0.01),
+    'num_hidden_layers': (5, 10),
+    'num_nodes': (5, 40),
 }
 
 # Optimize model #
-best_f1, best_model = net_tuning(X_train, y_train_dums, 
-                                 pbounds, n_init = n_init, 
+best_f1, best_model = net_tuning(X_train, y_train_dums,
+                                 pbounds, n_init = n_init,
                                  n_iter = n_iter, seed = seed,
                                  labeler = labeler)
 
@@ -471,7 +473,7 @@ train_compare = pd.concat([train_compare,
                            pd.DataFrame({'Model' : 'Neural Net',
                             'Train_F1': best_f1,
                             'Test_F1': test_f1,
-                            'Model_Specs': [best_model]})], 
+                            'Model_Specs': [best_model]})],
                           ignore_index = True).sort_values('Test_F1', ascending = False)
 
 # Stack model #
@@ -499,11 +501,11 @@ train_compare = pd.concat([train_compare,
                            pd.DataFrame({'Model' : 'Stacked',
                             'Train_F1': 0.0,
                             'Test_F1': test_f1,
-                            'Model_Specs': [stack]})], 
+                            'Model_Specs': [stack]})],
                           ignore_index = True).sort_values('Test_F1', ascending = False)
 
 #
-#### Save best model 
+#### Save best model
 #
 
 # Pull best model #
