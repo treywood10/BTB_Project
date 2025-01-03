@@ -509,18 +509,6 @@ train_compare = pd.concat([train_compare,
 # Pull best model #
 best_model = train_compare['Model_Specs'].iloc[0]
 
-bourbon_pred_trans = pd.DataFrame(
-    preprocess.transform(bourbon_pred),
-    columns = preprocess.get_feature_names_out(),
-    index = bourbon_pred.index)
-
-preds = best_model.predict_proba(bourbon_pred_trans)
-
-classes = labeler.classes_
-
-# Create a DataFrame with class labels and corresponding probabilities
-result_df = pd.DataFrame(preds, columns=classes)
-
 # Pickle best model #
 with open('bourbon_model.pkl', 'wb') as file:
     pickle.dump(best_model, file)
