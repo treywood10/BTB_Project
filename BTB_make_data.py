@@ -101,7 +101,7 @@ def update_historical_bourbon_data(df):
         max_date = df['Date'].max().date()  # Convert max date to datetime.date for comparison
         holiday_dates = holidays_df['Date'].dt.date  # Convert holidays_df['Date'] to datetime.date
 
-        print(max_date)
+        print(f'Current max date is {max_date}')
 
         if max_date in holiday_dates.values:  # Use 'in' with converted date values
 
@@ -118,7 +118,7 @@ def update_historical_bourbon_data(df):
             found_data = False
 
             # Loop to check up to 3 days in the future
-            for day_offset in range(3):
+            for day_offset in range(4):
                 day_1 = df['Date'].max() + timedelta(days=day_offset + 1)
                 day_1_form = day_1.strftime('%Y/%m/%d')
 
@@ -163,23 +163,27 @@ def update_historical_bourbon_data(df):
                     # Filter to keep rows in soup_df with dates not already in df
                     soup_df = soup_df[~soup_df['Date'].isin(df['Date'])]
 
-                    # Append to the original df #
-                    df = pd.concat([soup_df, df], ignore_index=True)
-                    df = df.sort_values(by=['Date'])
+                    if soup_df.empty:
+                        print(f"URL had issue with information found in the pulled table. Trying next day.")
 
-                    found_data = True
-                    break
+                    else:
+                        # Append to the original df #
+                        df = pd.concat([soup_df, df], ignore_index=True)
+                        df = df.sort_values(by=['Date'])
+
+                        found_data = True
+                        break
                 else:
                     print(f"URL does not exist or there was an issue for {day_1_form}.")
 
             # Break the outer loop if no data was found after checking 3 days
             if not found_data:
-                print("No valid data found for up to 3 days in the future. Exiting loop.")
+                print("No valid data found for up to 4 days in the future. Exiting loop.")
                 break
 
     return df
 
-
+# Scrape for data
 bourbon = update_historical_bourbon_data(bourbon)
 
 # Pull year, month, day, and DOW #
@@ -194,11 +198,9 @@ bourbon = bourbon.drop(['DOW'], axis=1)
 # Split B2 by '/' #
 bourbon[['B2', 'B3']] = bourbon['B2'].str.split('/', expand=True)
 
-
 # Function to detect alphanumeric in column
 def has_alphanum(s):
     return isinstance(s, str) and any(c.isalnum() for c in s)
-
 
 # Apply the function to replace values with NaN if no alphanumeric characters are present
 bourbon[['B2', 'B3']] = bourbon[['B2', 'B3']].apply(

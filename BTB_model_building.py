@@ -19,7 +19,6 @@ from sklearn.metrics import f1_score, make_scorer
 import tensorflow as tf
 from keras.utils import to_categorical
 
-
 # Import model tuning functions
 from models.logistic_train import log_tuning
 from models.svm_train import svm_tuning
@@ -127,8 +126,7 @@ y_test_encode = labeler.transform(y_test)
 pbounds = {
     'C' : (0.00001, 5),
     'penalty' : (0, 1),
-    'l1_ratio' : (0.1, 0.9),
-    'multi_class' : (0, 1)
+    'l1_ratio' : (0.1, 0.9)
 }
 
 # Optimize logistic model #
@@ -176,7 +174,7 @@ plt.xlabel("Permutation Importance")
 plt.ylabel("Feature")
 plt.title("Permutation Importance for Each Feature (Sorted)")
 plt.savefig('Importances/Logit.png')
-plt.show()
+#plt.show()
 
 #
 #### Support Vector Machine
@@ -236,7 +234,7 @@ plt.xlabel("Permutation Importance")
 plt.ylabel("Feature")
 plt.title("Permutation Importance for Each Feature (Sorted)")
 plt.savefig('Importances/SVM.png')
-plt.show()
+#plt.show()
 
 #
 #### Random Forest
@@ -296,7 +294,7 @@ plt.xlabel("Permutation Importance")
 plt.ylabel("Feature")
 plt.title("Permutation Importance for Each Feature (Sorted)")
 plt.savefig('Importances/Forest.png')
-plt.show()
+#plt.show()
 
 #
 #### XGBoost
@@ -358,7 +356,7 @@ plt.xlabel("Permutation Importance")
 plt.ylabel("Feature")
 plt.title("Permutation Importance for Each Feature (Sorted)")
 plt.savefig('Importances/Boost.png')
-plt.show()
+#plt.show()
 
 #
 #### KNN
@@ -416,7 +414,7 @@ plt.xlabel("Permutation Importance")
 plt.ylabel("Feature")
 plt.title("Permutation Importance for Each Feature (Sorted)")
 plt.savefig('Importances/KNN.png')
-plt.show()
+#plt.show()
 
 #
 #### Neural Net 
