@@ -163,6 +163,9 @@ def update_historical_bourbon_data(df):
                     # Filter to keep rows in soup_df with dates not already in df
                     soup_df = soup_df[~soup_df['Date'].isin(df['Date'])]
 
+                    # Filter incorrectly given dates
+                    soup_df = soup_df[soup_df['Date'] < datetime.now()]
+
                     if soup_df.empty:
                         print(f"URL had issue with information found in the pulled table. Trying next day.")
 

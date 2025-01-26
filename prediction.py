@@ -110,7 +110,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 tables = soup.find_all('table')
 
 # Find the correct table #
-table = tables[2]
+table = tables[1]
 
 # Make a dataframe to fill #
 rows = []
