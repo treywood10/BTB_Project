@@ -760,8 +760,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2022-12-15,Weller,2022,12,15,3,1,1,6,2,0,46.04,Blantons,Blantons,Weller
 2022-12-16,Blantons,2022,12,16,4,1,0,7,3,1,38.48,Eagle Rare,Weller,Other
 2022-12-16,Blantons,2022,12,16,4,1,0,7,3,1,38.48,Other,Weller,Other
-2022-12-17,Eagle Rare,2022,12,17,5,1,1,0,4,2,32.9,Weller,Blantons,Other
 2022-12-17,Eagle Rare,2022,12,17,5,1,1,0,4,2,32.9,Other,Blantons,Other
+2022-12-17,Eagle Rare,2022,12,17,5,1,1,0,4,2,32.9,Weller,Blantons,Other
 2022-12-18,Weller,2022,12,18,6,1,2,1,5,0,29.48,Eagle Rare,Eagle Rare,Other
 2022-12-18,Weller,2022,12,18,6,1,2,1,5,0,29.48,Other,Eagle Rare,Other
 2022-12-19,Eagle Rare,2022,12,19,0,1,3,0,6,1,27.32,Other,Weller,Other
@@ -772,16 +772,16 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2022-12-21,Weller,2022,12,21,2,1,1,2,8,0,33.26,Other,Blantons,Other
 2022-12-22,Taylor,2022,12,22,3,1,2,3,0,1,42.8,Closed,Weller,Other
 2022-12-24,Blantons,2022,12,24,5,1,0,5,2,3,8.600000000000001,Closed,Closed,No Extra
-2022-12-26,Eagle Rare,2022,12,26,0,1,2,0,4,5,21.74,Other,Closed,No Extra
 2022-12-26,Eagle Rare,2022,12,26,0,1,2,0,4,5,21.74,Weller,Closed,No Extra
-2022-12-27,Weller,2022,12,27,1,1,3,1,5,0,29.48,Other,Eagle Rare,Other
+2022-12-26,Eagle Rare,2022,12,26,0,1,2,0,4,5,21.74,Other,Closed,No Extra
 2022-12-27,Weller,2022,12,27,1,1,3,1,5,0,29.48,Blantons,Eagle Rare,Other
+2022-12-27,Weller,2022,12,27,1,1,3,1,5,0,29.48,Other,Eagle Rare,Other
 2022-12-28,Blantons,2022,12,28,2,1,0,2,6,1,37.04,Other,Weller,Other
 2022-12-28,Blantons,2022,12,28,2,1,0,2,6,1,37.04,Eagle Rare,Weller,Other
 2022-12-29,Eagle Rare,2022,12,29,3,1,1,0,7,2,55.76,Other,Blantons,Other
 2022-12-29,Eagle Rare,2022,12,29,3,1,1,0,7,2,55.76,Weller,Blantons,Other
-2022-12-30,Weller,2022,12,30,4,1,2,1,8,0,59.540000000000006,Blantons,Eagle Rare,Other
 2022-12-30,Weller,2022,12,30,4,1,2,1,8,0,59.540000000000006,Other,Eagle Rare,Other
+2022-12-30,Weller,2022,12,30,4,1,2,1,8,0,59.540000000000006,Blantons,Eagle Rare,Other
 2022-12-31,Blantons,2022,12,31,5,1,0,2,9,1,53.24,Closed,Weller,Other
 2023-01-02,Weller,2023,1,2,0,0,2,4,11,0,55.94,Blantons,Closed,No Extra
 2023-01-03,Blantons,2023,1,3,1,0,0,5,12,1,60.440000000000005,Taylor,Weller,No Extra
@@ -961,8 +961,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-06-25,Weller,2023,6,25,6,0,2,5,1,0,72.68,Blantons,Taylor,No Extra
 2023-06-26,Blantons,2023,6,26,0,0,0,6,2,1,73.04,Eagle Rare,Weller,No Extra
 2023-06-26,Blantons,2023,6,26,0,0,0,6,2,1,73.04,Taylor,Weller,No Extra
-2023-06-27,Eagle Rare,2023,6,27,1,1,1,0,0,2,71.96,Weller,Blantons,No Extra
 2023-06-27,Taylor,2023,6,27,1,1,1,0,0,2,71.96,Weller,Blantons,No Extra
+2023-06-27,Eagle Rare,2023,6,27,1,1,1,0,0,2,71.96,Weller,Blantons,No Extra
 2023-06-28,Weller,2023,6,28,2,0,2,1,1,0,71.6,Blantons,Taylor,Eagle Rare
 2023-06-29,Blantons,2023,6,29,3,0,0,2,2,1,70.34,Taylor,Weller,No Extra
 2023-06-30,Taylor,2023,6,30,4,0,1,3,0,2,75.56,Blantons,Blantons,No Extra
@@ -1076,8 +1076,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2023-10-15,Weller,2023,10,15,6,0,1,3,2,0,52.7,Taylor,Blantons,No Extra
 2023-10-16,Taylor,2023,10,16,0,0,2,4,0,1,50.54,Blantons,Weller,No Extra
 2023-10-17,Blantons,2023,10,17,1,0,0,5,1,2,52.16,Weller,Taylor,No Extra
-2023-10-18,Weller,2023,10,18,2,0,1,6,2,0,52.52,Weller,Blantons,No Extra
 2023-10-18,Weller,2023,10,18,2,0,1,6,2,0,52.52,Taylor,Blantons,No Extra
+2023-10-18,Weller,2023,10,18,2,0,1,6,2,0,52.52,Weller,Blantons,No Extra
 2023-10-19,Weller,2023,10,19,3,1,2,7,0,0,58.28,Blantons,Weller,No Extra
 2023-10-19,Taylor,2023,10,19,3,1,2,7,0,0,58.28,Blantons,Weller,No Extra
 2023-10-20,Blantons,2023,10,20,4,0,0,8,1,1,55.58,Eagle Rare,Taylor,Weller
@@ -1516,7 +1516,7 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2024-12-28,Eagle Rare,2024,12,28,5,0,1,0,8,2,57.02,Weller,Blantons,No Extra
 2024-12-29,Weller,2024,12,29,6,0,2,1,9,0,55.22,Blantons,Eagle Rare,No Extra
 2024-12-30,Blantons,2024,12,30,0,0,0,2,10,1,48.379999999999995,Eagle Rare,Weller,No Extra
-2024-12-31,Eagle Rare,2024,12,31,1,0,1,0,11,2,47.84,Closed,Blantons,No Extra
+2024-12-31,Eagle Rare,2024,12,31,1,0,1,0,11,2,48.02,Closed,Blantons,No Extra
 2025-01-02,Taylor,2025,1,2,3,0,3,2,0,4,34.88,Blantons,Closed,No Extra
 2025-01-03,Blantons,2025,1,3,4,0,0,3,1,5,33.08,Taylor,Taylor,No Extra
 2025-01-04,Taylor,2025,1,4,5,0,1,4,0,6,24.62,Closed,Blantons,No Extra
@@ -1532,7 +1532,7 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2025-01-16,Taylor,2025,1,16,3,0,2,1,0,3,33.26,Eagle Rare,Eagle Rare,No Extra
 2025-01-17,Eagle Rare,2025,1,17,4,0,3,0,1,4,37.22,Blantons,Taylor,No Extra
 2025-01-18,Blantons,2025,1,18,5,0,0,1,2,5,39.2,Taylor,Eagle Rare,No Extra
-2025-01-19,Taylor,2025,1,19,6,0,1,2,0,6,24.08,Weller,Blantons,No Extra
+2025-01-19,Taylor,2025,1,19,6,0,1,2,0,6,23.9,Weller,Blantons,No Extra
 2025-01-20,Weller,2025,1,20,0,0,2,3,1,0,5.899999999999999,Eagle Rare,Taylor,No Extra
 2025-01-21,Eagle Rare,2025,1,21,1,0,3,0,2,1,6.080000000000002,Taylor,Weller,No Extra
 2025-01-22,Taylor,2025,1,22,2,0,4,1,0,2,9.32,Eagle Rare,Eagle Rare,No Extra
@@ -1543,7 +1543,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2025-01-28,Taylor,2025,1,28,1,0,1,4,0,2,39.92,Weller,Blantons,No Extra
 2025-01-29,Weller,2025,1,29,2,0,2,5,1,0,42.8,Taylor,Taylor,No Extra
 2025-01-30,Taylor,2025,1,30,3,0,3,6,0,1,38.839999999999996,Blantons,Weller,No Extra
-2025-01-31,Blantons,2025,1,31,4,0,0,7,1,2,53.96,Taylor,Taylor,No Extra
+2025-01-31,Blantons,2025,1,31,4,0,0,7,1,2,53.78,Taylor,Taylor,No Extra
 2025-02-01,Taylor,2025,2,1,5,0,1,8,0,3,39.38,Eagle Rare,Blantons,No Extra
-2025-02-02,Eagle Rare,2025,2,2,6,0,2,0,1,4,43.7,Weller,Taylor,No Extra
-2025-02-03,Weller,2025,2,3,0,0,3,1,2,0,52.52,,Eagle Rare,No Extra
+2025-02-02,Eagle Rare,2025,2,2,6,0,2,0,1,4,46.04,Weller,Taylor,No Extra
+2025-02-03,Weller,2025,2,3,0,0,3,1,2,0,54.14,Blantons,Eagle Rare,No Extra
+2025-02-04,Blantons,2025,2,4,1,0,0,2,3,1,43.879999999999995,,Weller,No Extra
