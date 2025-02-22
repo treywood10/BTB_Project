@@ -87,7 +87,8 @@ def update_historical_bourbon_data(df):
     # Get BT holiday dates
     us_holidays = holidays.US(years=df['Date'].dt.year.max())
     us_holidays[easter.easter(df['Date'].dt.year.max())] = 'Easter Sunday'
-    us_holidays[pd.Timestamp(f'{df["Date"].dt.year.max()}-12-24')] = 'Christmas Eve'
+    year = int(df["Date"].dt.year.max())
+    us_holidays[pd.Timestamp(f'{year}-12-24')] = 'Christmas Eve'
     holidays_df = pd.DataFrame(list(us_holidays.items()), columns=['Date', 'Holiday']).sort_values(by='Date')
     holidays_df = holidays_df[holidays_df['Holiday'].isin(['New Year\'s Day', 'Easter Sunday', 'Independence Day',
                                                            'Thanksgiving', 'Christmas Eve', 'Christmas Day'])]
@@ -95,7 +96,7 @@ def update_historical_bourbon_data(df):
     # Ensure 'Date' column is in datetime format
     holidays_df['Date'] = pd.to_datetime(holidays_df['Date'])
 
-    while df['Date'].max() < datetime.now():
+    while pd.to_datetime(df['Date'].max()) < datetime.now():
 
         # Holiday Check
         max_date = df['Date'].max().date()  # Convert max date to datetime.date for comparison
@@ -188,6 +189,7 @@ def update_historical_bourbon_data(df):
 
 # Scrape for data
 bourbon = update_historical_bourbon_data(bourbon)
+bourbon = bourbon.dropna(subset=["Date"])
 
 # Pull year, month, day, and DOW #
 bourbon['Year'] = bourbon['Date'].dt.year
