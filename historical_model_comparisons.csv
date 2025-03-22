@@ -199,3 +199,4 @@ Date,My_Prediction,Their_Prediction,Bourbon_today,My_Correct,They_Correct
 2025-03-19 17:04:32.549137,Eagle Rare,Eagle Rare,Weller,0.0,0.0
 2025-03-20 17:04:40.012145,Blantons,Eagle Rare,Eagle Rare,0.0,1.0
 2025-03-21 17:04:47.119499,Blantons,Weller,Taylor,0.0,0.0
+2025-03-22 17:04:58.920345,Blantons,Weller,Blantons,1.0,0.0
