@@ -1679,4 +1679,5 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2025-06-26,Blantons,2025,6,26,3,0,0,1,17,2,82.75999999999999,Weller,Eagle Rare,No Extra
 2025-06-27,Weller,2025,6,27,4,0,1,2,18,0,80.06,Eagle Rare,Blantons,No Extra
 2025-06-28,Eagle Rare,2025,6,28,5,0,2,0,19,1,80.42,Blantons,Weller,No Extra
-2025-06-29,Blantons,2025,6,29,6,0,0,1,20,2,78.08,,Eagle Rare,No Extra
+2025-06-29,Blantons,2025,6,29,6,0,0,1,20,2,78.08,Blantons,Eagle Rare,No Extra
+2025-06-30,Blantons,2025,6,30,0,0,0,2,21,3,,,Blantons,No Extra
