@@ -1517,9 +1517,9 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2024-12-28,Eagle Rare,2024,12,28,5,0,1,0,2,11,57.02,Weller,Blantons,No Extra
 2024-12-29,Weller,2024,12,29,6,0,2,1,3,0,55.22,Blantons,Eagle Rare,No Extra
 2024-12-30,Blantons,2024,12,30,0,0,0,2,4,1,48.379999999999995,Eagle Rare,Weller,No Extra
-2024-12-31,Eagle Rare,2024,12,31,1,0,1,0,5,2,47.84,Taylor,Blantons,No Extra
-2025-01-01,Taylor,2025,1,1,2,0,2,1,0,3,34.88,Closed,Eagle Rare,No Extra
-2025-01-02,Blantons,2025,1,2,3,0,0,3,2,5,34.7,Taylor,Closed,No Extra
+2024-12-31,Eagle Rare,2024,12,31,1,0,1,0,5,2,47.84,Closed,Blantons,No Extra
+2025-01-01,Taylor,2025,1,1,2,0,2,1,0,4,34.88,Blantons,Closed,No Extra
+2025-01-02,Blantons,2025,1,2,3,0,0,3,2,5,34.7,Taylor,Taylor,No Extra
 2025-01-03,Taylor,2025,1,3,4,0,1,4,0,6,33.26,Weller,Blantons,No Extra
 2025-01-04,Weller,2025,1,4,5,0,2,5,1,0,24.62,Eagle Rare,Taylor,No Extra
 2025-01-05,Eagle Rare,2025,1,5,6,0,3,0,2,1,26.96,Eagle Rare,Weller,No Extra
@@ -1692,7 +1692,8 @@ Date,Bourbon_today,Year,Month,Day,Weekday,Multi,Blantons_time,Eagle Rare_time,Ta
 2025-07-10,Blantons,2025,7,10,3,0,0,12,31,1,78.25999999999999,Taylor,Weller,No Extra
 2025-07-11,Taylor,2025,7,11,4,0,1,13,0,2,81.14,Blantons,Blantons,No Extra
 2025-07-12,Blantons,2025,7,12,5,0,0,14,1,3,82.75999999999999,Blantons,Taylor,No Extra
-2025-07-13,Blantons,2025,7,13,6,0,0,15,2,4,80.06,Weller,Blantons,No Extra
-2025-07-14,Weller,2025,7,14,0,0,1,16,3,0,77.18,Blantons,Blantons,No Extra
-2025-07-15,Blantons,2025,7,15,1,0,0,17,4,1,,Weller,Weller,No Extra
-2025-07-16,Weller,2025,7,16,2,0,1,18,5,0,,,Blantons,No Extra
+2025-07-13,Blantons,2025,7,13,6,0,0,15,2,4,78.98,Weller,Blantons,No Extra
+2025-07-14,Weller,2025,7,14,0,0,1,16,3,0,75.74000000000001,Blantons,Blantons,No Extra
+2025-07-15,Blantons,2025,7,15,1,0,0,17,4,1,76.64,Weller,Weller,No Extra
+2025-07-16,Weller,2025,7,16,2,0,1,18,5,0,78.44,Eagle Rare,Blantons,No Extra
+2025-07-17,Eagle Rare,2025,7,17,3,0,2,0,6,1,78.25999999999999,,Weller,No Extra
